@@ -1,0 +1,148 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Modelo central: A Pessoa
+model People {
+  id        String   @id @default(cuid())
+  full_name String
+  headline  String // Ex: "Engenheiro de Backend Sênior | Node.js & TypeScript"
+  summary   String   @db.Text
+  location  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relações 1:N
+  contacts       Contacts[]
+  education      Education[]
+  experience     Experience[]
+  projects       Projects[]
+  certifications Certifications[]
+  social_links   SocialLinks[]
+  languages      Languages[]
+
+  // Relação N:M Implícita
+  skills Skills[]
+}
+
+// Entidades 1:N (Relacionadas a People)
+
+model Contacts {
+  id        String   @id @default(cuid())
+  type      String // Ex: "email", "phone", "website"
+  value     String
+  createdAt DateTime @default(now())
+
+  people   People @relation(fields: [peopleId], references: [id], onDelete: Cascade)
+  peopleId String @map("people_id")
+
+  @@unique([peopleId, type]) // Uma pessoa só pode ter um email, um telefone, etc.
+  @@index([peopleId])
+}
+
+model Education {
+  id             String    @id @default(cuid())
+  institution    String
+  degree         String // Ex: "Bacharelado em Ciência da Computação"
+  field_of_study String?
+  start_date     DateTime
+  end_date       DateTime? // Nulo se estiver cursando
+  description    String?   @db.Text
+  createdAt      DateTime  @default(now())
+
+  people   People @relation(fields: [peopleId], references: [id], onDelete: Cascade)
+  peopleId String @map("people_id")
+
+  @@index([peopleId])
+}
+
+model Experience {
+  id          String    @id @default(cuid())
+  company     String
+  position    String // Ex: "Desenvolvedor Full-Stack"
+  start_date  DateTime
+  end_date    DateTime? // Nulo se for o emprego atual
+  description String    @db.Text
+  location    String?
+  createdAt   DateTime  @default(now())
+
+  people   People @relation(fields: [peopleId], references: [id], onDelete: Cascade)
+  peopleId String @map("people_id")
+
+  @@index([peopleId])
+}
+
+model Projects {
+  id             String    @id @default(cuid())
+  name           String
+  description    String    @db.Text
+  url            String?
+  repository_url String?
+  start_date     DateTime
+  end_date       DateTime?
+  createdAt      DateTime  @default(now())
+
+  people   People @relation(fields: [peopleId], references: [id], onDelete: Cascade)
+  peopleId String @map("people_id")
+
+  @@index([peopleId])
+}
+
+model Certifications {
+  id         String   @id @default(cuid())
+  name       String
+  issuer     String // Ex: "AWS", "Scrum Alliance"
+  issue_date DateTime
+  url        String?
+  createdAt  DateTime @default(now())
+
+  people   People @relation(fields: [peopleId], references: [id], onDelete: Cascade)
+  peopleId String @map("people_id")
+
+  @@index([peopleId])
+}
+
+model Languages {
+  id          String   @id @default(cuid())
+  name        String // Ex: "Inglês"
+  proficiency String // Ex: "Fluente", "Nativo", "Básico"
+  createdAt   DateTime @default(now())
+
+  people   People @relation(fields: [peopleId], references: [id], onDelete: Cascade)
+  peopleId String @map("people_id")
+
+  @@unique([peopleId, name]) // Uma pessoa só tem um nível por língua
+  @@index([peopleId])
+}
+
+model SocialLinks {
+  id        String   @id @default(cuid())
+  platform  String // Ex: "linkedin", "github", "dribbble"
+  url       String
+  createdAt DateTime @default(now())
+
+  people   People @relation(fields: [peopleId], references: [id], onDelete: Cascade)
+  peopleId String @map("people_id")
+
+  @@unique([peopleId, platform])
+  @@index([peopleId])
+}
+
+// Entidade N:M
+
+model Skills {
+  id   String @id @default(cuid())
+  name String @unique // Ex: "TypeScript", "Figma"
+
+  // Relação N:M Implícita
+  people People[]
+}
+
