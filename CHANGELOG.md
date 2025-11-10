@@ -5,6 +5,58 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 e este projeto adere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### [Épico 2: CRUD Core (People)]
+#### Added
+- **Task: (PEOPLE-01) Implementar PeopleRepository (CRUD)**
+  - Interface IPeopleRepository definindo contratos de acesso aos dados
+  - Implementação PeopleRepository com métodos CRUD completos
+  - Métodos: create, findById, findAll, update, delete
+  - Única camada que interage diretamente com o Prisma Client
+  - Ordenação por createdAt desc no método findAll
+
+- **Task: (PEOPLE-02) Implementar PeopleService (CRUD)**
+  - Classe PeopleService contendo a lógica de negócios
+  - Classe NotFoundError customizada para erros 404
+  - Métodos: createPerson, getPersonById, getAllPeople, updatePerson, deletePerson
+  - Validação de existência antes de atualizar ou deletar
+  - Suporte para injeção de dependência para facilitar testes
+  - Atualizações parciais permitidas no método updatePerson
+  - Testes unitários completos (tests/unit/people.service.test.ts) cobrindo 100% do serviço
+  - Testes unitários usando jest-mock-extended para mockar o repositório
+  - Cobertura de todos os métodos e casos de erro (happy path e sad path)
+
+- **Task: (PEOPLE-03) Criar DTOs Zod e rotas/controller para People (CRUD)**
+  - DTOs Zod para validação de entrada: createPersonSchema, updatePersonSchema, personParamsSchema
+  - Validações com mensagens de erro em português
+  - Validação de tamanho mínimo e máximo para campos de string
+  - Campo location opcional no schema de criação
+  - Todos os campos opcionais no schema de atualização (permitindo atualizações parciais)
+  - PeopleController com métodos: create, getById, getAll, update, delete
+  - Rotas RESTful completas: GET /api/v1/people, GET /api/v1/people/:id, POST /api/v1/people, PUT /api/v1/people/:id, DELETE /api/v1/people/:id
+  - Middleware de validação Zod aplicado em todas as rotas
+  - Rotas registradas no app.ts
+
+- **Task: (PEOPLE-04) Escrever testes de integração (Supertest) para People CRUD**
+  - Testes de integração completos para todos os endpoints CRUD
+  - Cobertura de casos de sucesso (happy path) e erros (sad path)
+  - Testes de validação Zod (campos obrigatórios, tamanhos mínimos/máximos)
+  - Testes de erros 404 (pessoa não encontrada)
+  - Testes de atualizações parciais
+  - Limpeza do banco de dados antes e depois dos testes
+  - Verificação de persistência de dados no banco após operações
+
+#### Changed
+- **Task: Integração das rotas de People no app.ts**
+  - Rotas de People registradas em /api/v1/people
+  - Mantida consistência com a estrutura de rotas existente
+
+#### Performance
+- **Task: Otimizações de consultas no PeopleRepository**
+  - Ordenação por createdAt desc no findAll para retornar registros mais recentes primeiro
+  - Uso de findUnique para buscas por ID (mais eficiente que findFirst)
+
+---
+
 ### [Épico 1: Fundação (Infra & DB)]
 #### Added
 - **Task: (INFRA-01) Configurar projeto (npm, TS, ESLint, Prettier, Husky)**

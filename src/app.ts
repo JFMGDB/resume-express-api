@@ -2,6 +2,7 @@ import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import { errorHandler } from './middlewares/error.middleware';
 import healthRoutes from './routes/health.routes';
+import peopleRoutes from './routes/people.routes';
 
 const app: Application = express();
 
@@ -12,6 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Rotas
 app.use('/api/v1/health', healthRoutes);
+app.use('/api/v1/people', peopleRoutes);
 
 // Rota raiz
 app.get('/', (_req: Request, res: Response) => {

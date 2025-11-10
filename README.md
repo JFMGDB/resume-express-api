@@ -130,7 +130,7 @@ O projeto implementa os seguintes middlewares globais:
 - **Error Handler** (`src/middlewares/error.middleware.ts`): Trata erros de forma centralizada, incluindo:
   - Erros de validação Zod (400)
   - Erros do Prisma (P2002, P2025, P2003, P2004, etc.)
-  - Erros customizados da aplicação
+  - Erros customizados da aplicação (ex: `NotFoundError` - 404)
   - Logs de erro em desenvolvimento
 
 - **Validation Middleware** (`src/middlewares/validation.middleware.ts`): Validação genérica usando Zod:
@@ -163,6 +163,162 @@ O projeto implementa os seguintes middlewares globais:
   "message": "Currículo Express API",
   "version": "1.0.0",
   "status": "running"
+}
+```
+
+### People (Pessoas)
+
+#### Listar Todas as Pessoas
+
+- `GET /api/v1/people`: Lista todas as pessoas cadastradas
+
+**Resposta de Sucesso (200):**
+```json
+[
+  {
+    "id": "clxmg9v4o000008l4f3h3g3q3",
+    "full_name": "João Silva",
+    "headline": "Desenvolvedor Full-Stack Sênior",
+    "summary": "Engenheiro de software com 8 anos de experiência...",
+    "location": "São Paulo, Brasil",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  }
+]
+```
+
+#### Buscar Pessoa por ID
+
+- `GET /api/v1/people/:id`: Busca uma pessoa específica pelo ID
+
+**Parâmetros:**
+- `id` (string, obrigatório): ID da pessoa (cuid)
+
+**Resposta de Sucesso (200):**
+```json
+{
+  "id": "clxmg9v4o000008l4f3h3g3q3",
+  "full_name": "João Silva",
+  "headline": "Desenvolvedor Full-Stack Sênior",
+  "summary": "Engenheiro de software com 8 anos de experiência...",
+  "location": "São Paulo, Brasil",
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z"
+}
+```
+
+**Resposta de Erro (404):**
+```json
+{
+  "status": "error",
+  "message": "Person not found"
+}
+```
+
+#### Criar Nova Pessoa
+
+- `POST /api/v1/people`: Cria uma nova pessoa
+
+**Body (JSON):**
+```json
+{
+  "full_name": "João Silva",
+  "headline": "Desenvolvedor Full-Stack Sênior",
+  "summary": "Engenheiro de software com 8 anos de experiência na construção de aplicações web escaláveis.",
+  "location": "São Paulo, Brasil"
+}
+```
+
+**Campos:**
+- `full_name` (string, obrigatório): Nome completo (mínimo 3 caracteres, máximo 255)
+- `headline` (string, obrigatório): Título profissional (mínimo 3 caracteres, máximo 255)
+- `summary` (string, obrigatório): Resumo profissional (mínimo 10 caracteres)
+- `location` (string, opcional): Localização (máximo 255 caracteres)
+
+**Resposta de Sucesso (201):**
+```json
+{
+  "id": "clxmg9v4o000008l4f3h3g3q3",
+  "full_name": "João Silva",
+  "headline": "Desenvolvedor Full-Stack Sênior",
+  "summary": "Engenheiro de software com 8 anos de experiência...",
+  "location": "São Paulo, Brasil",
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z"
+}
+```
+
+**Resposta de Erro (400) - Validação:**
+```json
+{
+  "status": "error",
+  "message": "Validation failed",
+  "errors": [
+    {
+      "code": "too_small",
+      "path": ["body", "full_name"],
+      "message": "Nome completo deve ter pelo menos 3 caracteres"
+    }
+  ]
+}
+```
+
+#### Atualizar Pessoa
+
+- `PUT /api/v1/people/:id`: Atualiza uma pessoa existente
+
+**Parâmetros:**
+- `id` (string, obrigatório): ID da pessoa (cuid)
+
+**Body (JSON) - Todos os campos são opcionais:**
+```json
+{
+  "headline": "Desenvolvedor Full-Stack Sênior | Node.js & TypeScript",
+  "location": "Rio de Janeiro, Brasil"
+}
+```
+
+**Campos:**
+- `full_name` (string, opcional): Nome completo (mínimo 3 caracteres, máximo 255)
+- `headline` (string, opcional): Título profissional (mínimo 3 caracteres, máximo 255)
+- `summary` (string, opcional): Resumo profissional (mínimo 10 caracteres)
+- `location` (string, opcional): Localização (máximo 255 caracteres)
+
+**Resposta de Sucesso (200):**
+```json
+{
+  "id": "clxmg9v4o000008l4f3h3g3q3",
+  "full_name": "João Silva",
+  "headline": "Desenvolvedor Full-Stack Sênior | Node.js & TypeScript",
+  "summary": "Engenheiro de software com 8 anos de experiência...",
+  "location": "Rio de Janeiro, Brasil",
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T12:00:00.000Z"
+}
+```
+
+**Resposta de Erro (404):**
+```json
+{
+  "status": "error",
+  "message": "Person not found"
+}
+```
+
+#### Deletar Pessoa
+
+- `DELETE /api/v1/people/:id`: Deleta uma pessoa e todos os seus dados relacionados (cascata)
+
+**Parâmetros:**
+- `id` (string, obrigatório): ID da pessoa (cuid)
+
+**Resposta de Sucesso (204):** Sem conteúdo
+
+**Resposta de Erro (404):**
+```json
+{
+  "status": "error",
+  "message": "Person not found"
 }
 ```
 
@@ -204,6 +360,10 @@ npm run test:unit
 
 **Localização:** `tests/unit/`
 
+**Exemplos:**
+- `tests/unit/health.controller.test.ts` - Testes do Health Controller
+- `tests/unit/people.service.test.ts` - Testes do People Service (100% de cobertura)
+
 ### Testes de Integração
 
 Testam o fluxo completo da API, incluindo banco de dados:
@@ -213,6 +373,10 @@ npm run test:integration
 ```
 
 **Localização:** `tests/integration/`
+
+**Exemplos:**
+- `tests/integration/health.api.test.ts` - Testes da Health API
+- `tests/integration/people.api.test.ts` - Testes completos da People API (todos os endpoints CRUD)
 
 **Nota:** Os testes de integração requerem um banco de dados de teste configurado em `DATABASE_URL_TEST`.
 
