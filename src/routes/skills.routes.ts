@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { SkillsController } from '../controllers/skills.controller';
 import { validate } from '../middlewares/validation.middleware';
+import { authenticate } from '../middlewares/auth.middleware';
 import { createSkillSchema } from '../dtos/create-skill.dto';
 import { updateSkillSchema } from '../dtos/update-skill.dto';
 import { skillParamsSchema } from '../dtos/skill-params.dto';
@@ -30,7 +31,12 @@ router.get(
  * POST /api/v1/skills
  * Cria uma nova skill
  */
-router.post('/', validate({ body: createSkillSchema }), skillsController.create);
+router.post(
+  '/',
+  authenticate,
+  validate({ body: createSkillSchema }),
+  skillsController.create
+);
 
 /**
  * PUT /api/v1/skills/:id
@@ -38,6 +44,7 @@ router.post('/', validate({ body: createSkillSchema }), skillsController.create)
  */
 router.put(
   '/:id',
+  authenticate,
   validate({
     params: skillParamsSchema,
     body: updateSkillSchema,
@@ -51,6 +58,7 @@ router.put(
  */
 router.delete(
   '/:id',
+  authenticate,
   validate({
     params: skillParamsSchema,
   }),

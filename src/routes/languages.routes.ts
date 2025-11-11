@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { LanguagesController } from '../controllers/languages.controller';
 import { validate } from '../middlewares/validation.middleware';
+import { authenticate } from '../middlewares/auth.middleware';
 import { createLanguagesSchema } from '../dtos/create-languages.dto';
 import { updateLanguagesSchema } from '../dtos/update-languages.dto';
 import { languagesParamsSchema } from '../dtos/languages-params.dto';
@@ -12,7 +13,12 @@ const languagesController = new LanguagesController();
  * POST /api/v1/languages
  * Cria um novo idioma
  */
-router.post('/', validate({ body: createLanguagesSchema }), languagesController.create);
+router.post(
+  '/',
+  authenticate,
+  validate({ body: createLanguagesSchema }),
+  languagesController.create
+);
 
 /**
  * GET /api/v1/languages/:id
@@ -34,6 +40,7 @@ router.get(
  */
 router.put(
   '/:id',
+  authenticate,
   validate({
     params: languagesParamsSchema,
     body: updateLanguagesSchema,
@@ -47,6 +54,7 @@ router.put(
  */
 router.delete(
   '/:id',
+  authenticate,
   validate({
     params: languagesParamsSchema,
   }),

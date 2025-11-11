@@ -1,5 +1,6 @@
 import request from 'supertest';
 import app from '../../src/app';
+import { getAuthHeader } from '../helpers/auth.helper';
 
 // Pula os testes de integração se DATABASE_URL não estiver configurada
 const shouldSkipTests = !process.env.DATABASE_URL && !process.env.DATABASE_URL_TEST;
@@ -65,7 +66,10 @@ describe('People API (Integration)', () => {
         location: 'São Paulo, Brasil',
       };
 
-      const response = await request(app).post('/api/v1/people').send(newPerson);
+      const response = await request(app)
+        .post('/api/v1/people')
+        .set(getAuthHeader())
+        .send(newPerson);
 
       expect(response.status).toBe(201);
       expect(response.body).toHaveProperty('id');
@@ -89,7 +93,10 @@ describe('People API (Integration)', () => {
         headline: 'Missing full_name',
       };
 
-      const response = await request(app).post('/api/v1/people').send(invalidPerson);
+      const response = await request(app)
+        .post('/api/v1/people')
+        .set(getAuthHeader())
+        .send(invalidPerson);
 
       expect(response.status).toBe(400);
       expect(response.body).toHaveProperty('status', 'error');
@@ -106,7 +113,10 @@ describe('People API (Integration)', () => {
         summary: 'Short',
       };
 
-      const response = await request(app).post('/api/v1/people').send(invalidPerson);
+      const response = await request(app)
+        .post('/api/v1/people')
+        .set(getAuthHeader())
+        .send(invalidPerson);
 
       expect(response.status).toBe(400);
       expect(response.body).toHaveProperty('status', 'error');
@@ -121,7 +131,10 @@ describe('People API (Integration)', () => {
         summary: 'Designer de produto focada em criar experiências de usuário intuitivas e acessíveis.',
       };
 
-      const response = await request(app).post('/api/v1/people').send(newPerson);
+      const response = await request(app)
+        .post('/api/v1/people')
+        .set(getAuthHeader())
+        .send(newPerson);
 
       expect(response.status).toBe(201);
       expect(response.body.full_name).toBe(newPerson.full_name);
@@ -227,7 +240,10 @@ describe('People API (Integration)', () => {
         location: 'Rio de Janeiro, Brasil',
       };
 
-      const response = await request(app).put(`/api/v1/people/${person.id}`).send(updateData);
+      const response = await request(app)
+        .put(`/api/v1/people/${person.id}`)
+        .set(getAuthHeader())
+        .send(updateData);
 
       expect(response.status).toBe(200);
       expect(response.body.id).toBe(person.id);
@@ -290,7 +306,10 @@ describe('People API (Integration)', () => {
         headline: 'Desenvolvedor Full-Stack Sênior',
       };
 
-      const response = await request(app).put(`/api/v1/people/${person.id}`).send(updateData);
+      const response = await request(app)
+        .put(`/api/v1/people/${person.id}`)
+        .set(getAuthHeader())
+        .send(updateData);
 
       expect(response.status).toBe(200);
       expect(response.body.headline).toBe(updateData.headline);
@@ -310,7 +329,9 @@ describe('People API (Integration)', () => {
         },
       });
 
-      const response = await request(app).delete(`/api/v1/people/${person.id}`);
+      const response = await request(app)
+        .delete(`/api/v1/people/${person.id}`)
+        .set(getAuthHeader());
 
       expect(response.status).toBe(204);
 
@@ -324,7 +345,9 @@ describe('People API (Integration)', () => {
     it('should return 404 when person does not exist', async () => {
       const nonExistentId = 'clxmg9v4o000008l4f3h3g3q3';
 
-      const response = await request(app).delete(`/api/v1/people/${nonExistentId}`);
+      const response = await request(app)
+        .delete(`/api/v1/people/${nonExistentId}`)
+        .set(getAuthHeader());
 
       expect(response.status).toBe(404);
       expect(response.body).toHaveProperty('status', 'error');

@@ -5,6 +5,87 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 e este projeto adere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### [Épico 6: Deploy e Autenticação]
+#### Added
+- **Task: (DEPLOY-01) Criar script de seed.ts (João e Mariana)**
+  - Script de seed completo implementado em `prisma/seed.ts`
+  - Popula o banco de dados com dados de exemplo realistas
+  - Cria 10 skills comuns (TypeScript, React.js, Node.js, Prisma, PostgreSQL, Figma, Design System, User Research, UX Writing, Docker)
+  - Cria pessoa João Silva (Desenvolvedor Full-Stack Sênior) com:
+    - 3 contatos (email, phone, website)
+    - 2 links sociais (LinkedIn, GitHub)
+    - 6 skills associadas
+    - 3 experiências profissionais
+    - 1 formação acadêmica (USP)
+    - 2 idiomas (Português, Inglês)
+    - 2 certificações (AWS, Docker)
+    - 2 projetos
+  - Cria pessoa Mariana Costa (Product Designer Sênior) com:
+    - 2 contatos (email, website)
+    - 2 links sociais (LinkedIn, Dribbble)
+    - 4 skills associadas
+    - 3 experiências profissionais
+    - 1 formação acadêmica (Universidade do Porto)
+    - 3 idiomas (Português, Inglês, Espanhol)
+    - 1 certificação (Google UX Design)
+    - 2 projetos
+  - Script limpa dados antigos antes de popular
+  - Executável via `npm run prisma:seed`
+
+- **Task: (DEPLOY-02) Configurar deploy no Vercel e vercel.json**
+  - Arquivo `vercel.json` configurado para deploy serverless
+  - Script `vercel-build` configurado no package.json
+  - Build process garante geração do Prisma Client e aplicação de migrações
+  - Configuração otimizada para ambiente serverless da Vercel
+
+- **Task: (DEPLOY-03) Configurar autenticação de API (API Key/Bearer)**
+  - Middleware de autenticação implementado (`src/middlewares/auth.middleware.ts`)
+  - Validação de Bearer Token no header Authorization
+  - Proteção de todos os endpoints de escrita (POST, PUT, DELETE)
+  - Endpoints de leitura (GET) permanecem públicos
+  - Mensagens de erro padronizadas (401 para header ausente/formato inválido, 403 para token inválido)
+  - Constantes extraídas para mensagens de erro (seguindo DRY)
+  - Middleware exportado em `src/middlewares/index.ts`
+  - Aplicado em todas as rotas de escrita de todas as entidades:
+    - People (POST, PUT, DELETE, associate-skill, disassociate-skill)
+    - Experience, Education, Projects, Contacts, SocialLinks, Languages, Certifications (POST, PUT, DELETE)
+    - Skills (POST, PUT, DELETE)
+  - Variável de ambiente `API_SECRET_KEY` obrigatória para autenticação
+
+#### Testing
+- **Task: Testes de autenticação**
+  - Helper de autenticação criado (`tests/helpers/auth.helper.ts`) para reutilização nos testes (DRY)
+  - Testes unitários completos (`tests/unit/auth.middleware.test.ts`) cobrindo:
+    - Autenticação bem-sucedida com token válido
+    - Erro 401 quando header Authorization está ausente
+    - Erro 401 quando formato do header é inválido (sem Bearer)
+    - Erro 401 quando formato tem mais de 2 partes
+    - Erro 403 quando token é inválido
+    - Erro 403 quando token está vazio
+  - Testes de integração completos (`tests/integration/auth.api.test.ts`) cobrindo:
+    - Rotas protegidas retornam 401 sem autenticação
+    - Rotas protegidas retornam 401 com formato inválido
+    - Rotas protegidas retornam 403 com token inválido
+    - Rotas públicas (GET) permanecem acessíveis sem autenticação
+    - Autenticação bem-sucedida permite criar recursos
+  - Testes de integração existentes atualizados para incluir autenticação nas rotas protegidas
+  - Helper function criada para reduzir duplicação nos testes unitários (DRY)
+
+#### Changed
+- **Task: Atualização de rotas para incluir autenticação**
+  - Todas as rotas POST, PUT e DELETE agora requerem autenticação Bearer Token
+  - Rotas GET permanecem públicas (sem autenticação)
+  - Middleware `authenticate` aplicado consistentemente em todas as rotas de escrita
+
+#### Security
+- **Task: Implementação de segurança para endpoints de escrita**
+  - Proteção de todos os endpoints de escrita com Bearer Token authentication
+  - Validação rigorosa do formato do header Authorization
+  - Mensagens de erro padronizadas que não expõem detalhes internos
+  - Variável de ambiente `API_SECRET_KEY` obrigatória e validada na inicialização
+
+---
+
 ### [Épico 5: Endpoint Agregado]
 #### Added
 - **Task: (AGG-01) Endpoint GET /people/:id/full**

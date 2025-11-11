@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { SocialLinksController } from '../controllers/social-links.controller';
 import { validate } from '../middlewares/validation.middleware';
+import { authenticate } from '../middlewares/auth.middleware';
 import { createSocialLinksSchema } from '../dtos/create-social-links.dto';
 import { updateSocialLinksSchema } from '../dtos/update-social-links.dto';
 import { socialLinksParamsSchema } from '../dtos/social-links-params.dto';
@@ -12,7 +13,12 @@ const socialLinksController = new SocialLinksController();
  * POST /api/v1/social-links
  * Cria um novo link social
  */
-router.post('/', validate({ body: createSocialLinksSchema }), socialLinksController.create);
+router.post(
+  '/',
+  authenticate,
+  validate({ body: createSocialLinksSchema }),
+  socialLinksController.create
+);
 
 /**
  * GET /api/v1/social-links/:id
@@ -34,6 +40,7 @@ router.get(
  */
 router.put(
   '/:id',
+  authenticate,
   validate({
     params: socialLinksParamsSchema,
     body: updateSocialLinksSchema,
@@ -47,6 +54,7 @@ router.put(
  */
 router.delete(
   '/:id',
+  authenticate,
   validate({
     params: socialLinksParamsSchema,
   }),

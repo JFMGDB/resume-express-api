@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { CertificationsController } from '../controllers/certifications.controller';
 import { validate } from '../middlewares/validation.middleware';
+import { authenticate } from '../middlewares/auth.middleware';
 import { createCertificationsSchema } from '../dtos/create-certifications.dto';
 import { updateCertificationsSchema } from '../dtos/update-certifications.dto';
 import { certificationsParamsSchema } from '../dtos/certifications-params.dto';
@@ -12,7 +13,12 @@ const certificationsController = new CertificationsController();
  * POST /api/v1/certifications
  * Cria uma nova certificação
  */
-router.post('/', validate({ body: createCertificationsSchema }), certificationsController.create);
+router.post(
+  '/',
+  authenticate,
+  validate({ body: createCertificationsSchema }),
+  certificationsController.create
+);
 
 /**
  * GET /api/v1/certifications/:id
@@ -34,6 +40,7 @@ router.get(
  */
 router.put(
   '/:id',
+  authenticate,
   validate({
     params: certificationsParamsSchema,
     body: updateCertificationsSchema,
@@ -47,6 +54,7 @@ router.put(
  */
 router.delete(
   '/:id',
+  authenticate,
   validate({
     params: certificationsParamsSchema,
   }),

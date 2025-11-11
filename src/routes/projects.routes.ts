@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { ProjectsController } from '../controllers/projects.controller';
 import { validate } from '../middlewares/validation.middleware';
+import { authenticate } from '../middlewares/auth.middleware';
 import { createProjectsSchema } from '../dtos/create-projects.dto';
 import { updateProjectsSchema } from '../dtos/update-projects.dto';
 import { projectsParamsSchema } from '../dtos/projects-params.dto';
@@ -12,7 +13,12 @@ const projectsController = new ProjectsController();
  * POST /api/v1/projects
  * Cria um novo projeto
  */
-router.post('/', validate({ body: createProjectsSchema }), projectsController.create);
+router.post(
+  '/',
+  authenticate,
+  validate({ body: createProjectsSchema }),
+  projectsController.create
+);
 
 /**
  * GET /api/v1/projects/:id
@@ -34,6 +40,7 @@ router.get(
  */
 router.put(
   '/:id',
+  authenticate,
   validate({
     params: projectsParamsSchema,
     body: updateProjectsSchema,
@@ -47,6 +54,7 @@ router.put(
  */
 router.delete(
   '/:id',
+  authenticate,
   validate({
     params: projectsParamsSchema,
   }),

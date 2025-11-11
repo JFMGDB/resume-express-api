@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { EducationController } from '../controllers/education.controller';
 import { validate } from '../middlewares/validation.middleware';
+import { authenticate } from '../middlewares/auth.middleware';
 import { createEducationSchema } from '../dtos/create-education.dto';
 import { updateEducationSchema } from '../dtos/update-education.dto';
 import { educationParamsSchema } from '../dtos/education-params.dto';
@@ -12,7 +13,12 @@ const educationController = new EducationController();
  * POST /api/v1/education
  * Cria uma nova educação
  */
-router.post('/', validate({ body: createEducationSchema }), educationController.create);
+router.post(
+  '/',
+  authenticate,
+  validate({ body: createEducationSchema }),
+  educationController.create
+);
 
 /**
  * GET /api/v1/education/:id
@@ -34,6 +40,7 @@ router.get(
  */
 router.put(
   '/:id',
+  authenticate,
   validate({
     params: educationParamsSchema,
     body: updateEducationSchema,
@@ -47,6 +54,7 @@ router.put(
  */
 router.delete(
   '/:id',
+  authenticate,
   validate({
     params: educationParamsSchema,
   }),

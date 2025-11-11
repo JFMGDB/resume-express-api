@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { ContactsController } from '../controllers/contacts.controller';
 import { validate } from '../middlewares/validation.middleware';
+import { authenticate } from '../middlewares/auth.middleware';
 import { createContactsSchema } from '../dtos/create-contacts.dto';
 import { updateContactsSchema } from '../dtos/update-contacts.dto';
 import { contactsParamsSchema } from '../dtos/contacts-params.dto';
@@ -12,7 +13,12 @@ const contactsController = new ContactsController();
  * POST /api/v1/contacts
  * Cria um novo contato
  */
-router.post('/', validate({ body: createContactsSchema }), contactsController.create);
+router.post(
+  '/',
+  authenticate,
+  validate({ body: createContactsSchema }),
+  contactsController.create
+);
 
 /**
  * GET /api/v1/contacts/:id
@@ -34,6 +40,7 @@ router.get(
  */
 router.put(
   '/:id',
+  authenticate,
   validate({
     params: contactsParamsSchema,
     body: updateContactsSchema,
@@ -47,6 +54,7 @@ router.put(
  */
 router.delete(
   '/:id',
+  authenticate,
   validate({
     params: contactsParamsSchema,
   }),

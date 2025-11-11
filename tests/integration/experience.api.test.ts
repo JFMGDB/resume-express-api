@@ -1,5 +1,6 @@
 import request from 'supertest';
 import app from '../../src/app';
+import { getAuthHeader } from '../helpers/auth.helper';
 
 // Pula os testes de integração se DATABASE_URL não estiver configurada
 const shouldSkipTests = !process.env.DATABASE_URL && !process.env.DATABASE_URL_TEST;
@@ -62,7 +63,10 @@ describe('Experience API (Integration)', () => {
         location: 'São Paulo, Brasil',
       };
 
-      const response = await request(app).post('/api/v1/experience').send(newExperience);
+      const response = await request(app)
+        .post('/api/v1/experience')
+        .set(getAuthHeader())
+        .send(newExperience);
 
       expect(response.status).toBe(201);
       expect(response.body).toHaveProperty('id');
@@ -117,7 +121,10 @@ describe('Experience API (Integration)', () => {
         start_date: '2019-01-01T00:00:00.000Z',
       };
 
-      const response = await request(app).post('/api/v1/experience').send(newExperience);
+      const response = await request(app)
+        .post('/api/v1/experience')
+        .set(getAuthHeader())
+        .send(newExperience);
 
       expect(response.status).toBe(201);
       expect(response.body.company).toBe(newExperience.company);
@@ -135,7 +142,10 @@ describe('Experience API (Integration)', () => {
         start_date: '2020-01-01T00:00:00.000Z',
       };
 
-      const response = await request(app).post('/api/v1/experience').send(newExperience);
+      const response = await request(app)
+        .post('/api/v1/experience')
+        .set(getAuthHeader())
+        .send(newExperience);
 
       expect(response.status).toBe(404);
       expect(response.body).toHaveProperty('status', 'error');

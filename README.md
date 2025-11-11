@@ -84,6 +84,11 @@ npm run prisma:migrate
 npm run prisma:seed
 ```
 
+**Nota:** O script de seed cria dados de exemplo incluindo:
+- 10 skills comuns (TypeScript, React.js, Node.js, Prisma, PostgreSQL, Figma, Design System, User Research, UX Writing, Docker)
+- Pessoa João Silva (Desenvolvedor Full-Stack Sênior) com currículo completo
+- Pessoa Mariana Costa (Product Designer Sênior) com currículo completo
+
 ## Scripts Disponíveis
 
 - `npm run dev`: Inicia o servidor em modo desenvolvimento com hot-reload
@@ -137,6 +142,74 @@ O projeto implementa os seguintes middlewares globais:
   - Suporta validação de body, query e params separadamente
   - Suporta schema único para validação do body
   - Propaga erros de validação para o error handler
+
+- **Authentication Middleware** (`src/middlewares/auth.middleware.ts`): Autenticação Bearer Token:
+  - Protege todos os endpoints de escrita (POST, PUT, DELETE)
+  - Valida o Bearer Token no header Authorization
+  - Retorna 401 quando header está ausente ou formato é inválido
+  - Retorna 403 quando token é inválido ou expirado
+  - Endpoints de leitura (GET) permanecem públicos
+
+## Autenticação
+
+A API utiliza autenticação via Bearer Token para proteger endpoints de escrita (POST, PUT, DELETE). Endpoints de leitura (GET) são públicos e não requerem autenticação.
+
+### Como Autenticar
+
+Inclua o header `Authorization` com o formato Bearer Token em todas as requisições de escrita:
+
+```
+Authorization: Bearer <API_SECRET_KEY>
+```
+
+**Exemplo:**
+```bash
+curl -X POST https://api.example.com/api/v1/people \
+  -H "Authorization: Bearer sua-api-secret-key-aqui" \
+  -H "Content-Type: application/json" \
+  -d '{"full_name": "João Silva", "headline": "Desenvolvedor", "summary": "Resumo profissional"}'
+```
+
+### Endpoints Protegidos
+
+Todos os endpoints de escrita requerem autenticação:
+- `POST /api/v1/*` - Criar recursos
+- `PUT /api/v1/*` - Atualizar recursos
+- `DELETE /api/v1/*` - Deletar recursos
+- `POST /api/v1/people/associate-skill` - Associar skill
+- `POST /api/v1/people/disassociate-skill` - Desassociar skill
+
+### Endpoints Públicos
+
+Endpoints de leitura não requerem autenticação:
+- `GET /api/v1/*` - Listar e buscar recursos
+- `GET /api/v1/health` - Health check
+
+### Respostas de Erro de Autenticação
+
+**401 Unauthorized - Header ausente:**
+```json
+{
+  "status": "error",
+  "message": "Authorization header is required"
+}
+```
+
+**401 Unauthorized - Formato inválido:**
+```json
+{
+  "status": "error",
+  "message": "Invalid authorization format. Expected: Bearer <token>"
+}
+```
+
+**403 Forbidden - Token inválido:**
+```json
+{
+  "status": "error",
+  "message": "Invalid or expired token"
+}
+```
 
 ## Endpoints
 
@@ -363,6 +436,8 @@ Este endpoint retorna uma pessoa com todas as suas relações incluídas em uma 
 
 - `POST /api/v1/people`: Cria uma nova pessoa
 
+**Autenticação:** Requerida (Bearer Token)
+
 **Body (JSON):**
 ```json
 {
@@ -411,6 +486,8 @@ Este endpoint retorna uma pessoa com todas as suas relações incluídas em uma 
 
 - `PUT /api/v1/people/:id`: Atualiza uma pessoa existente
 
+**Autenticação:** Requerida (Bearer Token)
+
 **Parâmetros:**
 - `id` (string, obrigatório): ID da pessoa (cuid)
 
@@ -453,6 +530,8 @@ Este endpoint retorna uma pessoa com todas as suas relações incluídas em uma 
 
 - `DELETE /api/v1/people/:id`: Deleta uma pessoa e todos os seus dados relacionados (cascata)
 
+**Autenticação:** Requerida (Bearer Token)
+
 **Parâmetros:**
 - `id` (string, obrigatório): ID da pessoa (cuid)
 
@@ -471,6 +550,8 @@ Este endpoint retorna uma pessoa com todas as suas relações incluídas em uma 
 #### Criar Nova Experiência
 
 - `POST /api/v1/experience`: Cria uma nova experiência profissional
+
+**Autenticação:** Requerida (Bearer Token)
 
 **Body (JSON):**
 ```json
@@ -513,6 +594,8 @@ Este endpoint retorna uma pessoa com todas as suas relações incluídas em uma 
 
 - `PUT /api/v1/experience/:id`: Atualiza uma experiência existente
 
+**Autenticação:** Requerida (Bearer Token)
+
 **Parâmetros:**
 - `id` (string, obrigatório): ID da experiência (cuid)
 
@@ -533,6 +616,8 @@ Este endpoint retorna uma pessoa com todas as suas relações incluídas em uma 
 
 - `DELETE /api/v1/experience/:id`: Deleta uma experiência
 
+**Autenticação:** Requerida (Bearer Token)
+
 **Parâmetros:**
 - `id` (string, obrigatório): ID da experiência (cuid)
 
@@ -545,6 +630,8 @@ Este endpoint retorna uma pessoa com todas as suas relações incluídas em uma 
 #### Criar Nova Educação
 
 - `POST /api/v1/education`: Cria uma nova formação acadêmica
+
+**Autenticação:** Requerida (Bearer Token)
 
 **Body (JSON):**
 ```json
@@ -583,6 +670,8 @@ Este endpoint retorna uma pessoa com todas as suas relações incluídas em uma 
 
 - `PUT /api/v1/education/:id`: Atualiza uma educação existente
 
+**Autenticação:** Requerida (Bearer Token)
+
 **Parâmetros:**
 - `id` (string, obrigatório): ID da educação (cuid)
 
@@ -594,6 +683,8 @@ Este endpoint retorna uma pessoa com todas as suas relações incluídas em uma 
 
 - `DELETE /api/v1/education/:id`: Deleta uma educação
 
+**Autenticação:** Requerida (Bearer Token)
+
 **Parâmetros:**
 - `id` (string, obrigatório): ID da educação (cuid)
 
@@ -604,6 +695,8 @@ Este endpoint retorna uma pessoa com todas as suas relações incluídas em uma 
 #### Criar Novo Projeto
 
 - `POST /api/v1/projects`: Cria um novo projeto
+
+**Autenticação:** Requerida (Bearer Token)
 
 **Body (JSON):**
 ```json
@@ -642,6 +735,8 @@ Este endpoint retorna uma pessoa com todas as suas relações incluídas em uma 
 
 - `PUT /api/v1/projects/:id`: Atualiza um projeto existente
 
+**Autenticação:** Requerida (Bearer Token)
+
 **Parâmetros:**
 - `id` (string, obrigatório): ID do projeto (cuid)
 
@@ -653,6 +748,8 @@ Este endpoint retorna uma pessoa com todas as suas relações incluídas em uma 
 
 - `DELETE /api/v1/projects/:id`: Deleta um projeto
 
+**Autenticação:** Requerida (Bearer Token)
+
 **Parâmetros:**
 - `id` (string, obrigatório): ID do projeto (cuid)
 
@@ -663,6 +760,8 @@ Este endpoint retorna uma pessoa com todas as suas relações incluídas em uma 
 #### Criar Novo Contato
 
 - `POST /api/v1/contacts`: Cria um novo contato
+
+**Autenticação:** Requerida (Bearer Token)
 
 **Body (JSON):**
 ```json
@@ -693,6 +792,8 @@ Este endpoint retorna uma pessoa com todas as suas relações incluídas em uma 
 
 - `PUT /api/v1/contacts/:id`: Atualiza um contato existente
 
+**Autenticação:** Requerida (Bearer Token)
+
 **Parâmetros:**
 - `id` (string, obrigatório): ID do contato (cuid)
 
@@ -704,6 +805,8 @@ Este endpoint retorna uma pessoa com todas as suas relações incluídas em uma 
 
 - `DELETE /api/v1/contacts/:id`: Deleta um contato
 
+**Autenticação:** Requerida (Bearer Token)
+
 **Parâmetros:**
 - `id` (string, obrigatório): ID do contato (cuid)
 
@@ -714,6 +817,8 @@ Este endpoint retorna uma pessoa com todas as suas relações incluídas em uma 
 #### Criar Novo Link Social
 
 - `POST /api/v1/social-links`: Cria um novo link social
+
+**Autenticação:** Requerida (Bearer Token)
 
 **Body (JSON):**
 ```json
@@ -744,6 +849,8 @@ Este endpoint retorna uma pessoa com todas as suas relações incluídas em uma 
 
 - `PUT /api/v1/social-links/:id`: Atualiza um link social existente
 
+**Autenticação:** Requerida (Bearer Token)
+
 **Parâmetros:**
 - `id` (string, obrigatório): ID do link social (cuid)
 
@@ -755,6 +862,8 @@ Este endpoint retorna uma pessoa com todas as suas relações incluídas em uma 
 
 - `DELETE /api/v1/social-links/:id`: Deleta um link social
 
+**Autenticação:** Requerida (Bearer Token)
+
 **Parâmetros:**
 - `id` (string, obrigatório): ID do link social (cuid)
 
@@ -765,6 +874,8 @@ Este endpoint retorna uma pessoa com todas as suas relações incluídas em uma 
 #### Criar Novo Idioma
 
 - `POST /api/v1/languages`: Cria um novo idioma
+
+**Autenticação:** Requerida (Bearer Token)
 
 **Body (JSON):**
 ```json
@@ -795,6 +906,8 @@ Este endpoint retorna uma pessoa com todas as suas relações incluídas em uma 
 
 - `PUT /api/v1/languages/:id`: Atualiza um idioma existente
 
+**Autenticação:** Requerida (Bearer Token)
+
 **Parâmetros:**
 - `id` (string, obrigatório): ID do idioma (cuid)
 
@@ -806,6 +919,8 @@ Este endpoint retorna uma pessoa com todas as suas relações incluídas em uma 
 
 - `DELETE /api/v1/languages/:id`: Deleta um idioma
 
+**Autenticação:** Requerida (Bearer Token)
+
 **Parâmetros:**
 - `id` (string, obrigatório): ID do idioma (cuid)
 
@@ -816,6 +931,8 @@ Este endpoint retorna uma pessoa com todas as suas relações incluídas em uma 
 #### Criar Nova Certificação
 
 - `POST /api/v1/certifications`: Cria uma nova certificação
+
+**Autenticação:** Requerida (Bearer Token)
 
 **Body (JSON):**
 ```json
@@ -850,6 +967,8 @@ Este endpoint retorna uma pessoa com todas as suas relações incluídas em uma 
 
 - `PUT /api/v1/certifications/:id`: Atualiza uma certificação existente
 
+**Autenticação:** Requerida (Bearer Token)
+
 **Parâmetros:**
 - `id` (string, obrigatório): ID da certificação (cuid)
 
@@ -861,6 +980,8 @@ Este endpoint retorna uma pessoa com todas as suas relações incluídas em uma 
 
 - `DELETE /api/v1/certifications/:id`: Deleta uma certificação
 
+**Autenticação:** Requerida (Bearer Token)
+
 **Parâmetros:**
 - `id` (string, obrigatório): ID da certificação (cuid)
 
@@ -869,6 +990,8 @@ Este endpoint retorna uma pessoa com todas as suas relações incluídas em uma 
 #### Associar Skill a Pessoa
 
 - `POST /api/v1/people/associate-skill`: Associa uma skill a uma pessoa
+
+**Autenticação:** Requerida (Bearer Token)
 
 **Body (JSON):**
 ```json
@@ -889,6 +1012,8 @@ Este endpoint retorna uma pessoa com todas as suas relações incluídas em uma 
 #### Desassociar Skill de Pessoa
 
 - `POST /api/v1/people/disassociate-skill`: Desassocia uma skill de uma pessoa
+
+**Autenticação:** Requerida (Bearer Token)
 
 **Body (JSON):**
 ```json
@@ -959,6 +1084,8 @@ Este endpoint retorna uma pessoa com todas as suas relações incluídas em uma 
 
 - `POST /api/v1/skills`: Cria uma nova skill
 
+**Autenticação:** Requerida (Bearer Token)
+
 **Body (JSON):**
 ```json
 {
@@ -991,6 +1118,8 @@ Este endpoint retorna uma pessoa com todas as suas relações incluídas em uma 
 
 - `PUT /api/v1/skills/:id`: Atualiza uma skill existente
 
+**Autenticação:** Requerida (Bearer Token)
+
 **Parâmetros:**
 - `id` (string, obrigatório): ID da skill (cuid)
 
@@ -1013,6 +1142,8 @@ Este endpoint retorna uma pessoa com todas as suas relações incluídas em uma 
 #### Deletar Skill
 
 - `DELETE /api/v1/skills/:id`: Deleta uma skill
+
+**Autenticação:** Requerida (Bearer Token)
 
 **Parâmetros:**
 - `id` (string, obrigatório): ID da skill (cuid)
@@ -1042,6 +1173,8 @@ A API retorna erros padronizados no seguinte formato:
 ### Códigos de Status HTTP
 
 - `400`: Bad Request - Erro de validação (Zod) ou constraint do banco
+- `401`: Unauthorized - Header Authorization ausente ou formato inválido
+- `403`: Forbidden - Token de autenticação inválido ou expirado
 - `404`: Not Found - Registro não encontrado
 - `409`: Conflict - Violação de constraint única (ex: nome de skill duplicado)
 - `500`: Internal Server Error - Erro genérico do servidor ou banco de dados
@@ -1069,6 +1202,7 @@ npm run test:unit
 - `tests/unit/health.controller.test.ts` - Testes do Health Controller
 - `tests/unit/people.service.test.ts` - Testes do People Service (100% de cobertura, incluindo método getPersonFullById)
 - `tests/unit/skills.service.test.ts` - Testes do Skills Service (100% de cobertura)
+- `tests/unit/auth.middleware.test.ts` - Testes do middleware de autenticação (todos os cenários de sucesso e falha)
 
 ### Testes de Integração
 
@@ -1092,8 +1226,9 @@ npm run test:integration
 - `tests/integration/certifications.api.test.ts` - Testes completos da Certifications API
 - `tests/integration/skills.api.test.ts` - Testes completos da Skills API
 - `tests/integration/people-associate-skill.api.test.ts` - Testes de associação/desassociação de skills
+- `tests/integration/auth.api.test.ts` - Testes de autenticação (rotas protegidas e públicas)
 
-**Nota:** Os testes de integração requerem um banco de dados de teste configurado em `DATABASE_URL_TEST`.
+**Nota:** Os testes de integração requerem um banco de dados de teste configurado em `DATABASE_URL_TEST` e a variável `API_SECRET_KEY` configurada.
 
 ### Configuração de Testes
 
@@ -1103,8 +1238,33 @@ O arquivo `tests/setup.ts` configura o ambiente de testes globalmente, incluindo
 
 ## Deploy
 
-O projeto está configurado para deploy na Vercel. O script `vercel-build` garante que:
+O projeto está configurado para deploy na Vercel como função serverless. O arquivo `vercel.json` define a configuração de deploy e o script `vercel-build` garante que:
 
 1. O Prisma Client seja gerado
 2. As migrações sejam aplicadas
 3. O TypeScript seja compilado
+
+### Variáveis de Ambiente no Vercel
+
+Configure as seguintes variáveis de ambiente no painel da Vercel:
+
+- `DATABASE_URL`: URL de conexão do PostgreSQL (obrigatório)
+- `API_SECRET_KEY`: Chave secreta para autenticação da API (obrigatório)
+- `NODE_ENV`: Ambiente (opcional, padrão: production)
+
+### Deploy
+
+Para fazer deploy na Vercel:
+
+```bash
+# Instalar Vercel CLI (se ainda não tiver)
+npm i -g vercel
+
+# Fazer deploy
+vercel
+
+# Ou fazer deploy de produção
+vercel --prod
+```
+
+O deploy automático ocorre quando você faz push para a branch principal (se configurado no Vercel).
