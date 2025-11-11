@@ -1,6 +1,39 @@
 # Currículo Express API
 
+![Node.js](https://img.shields.io/badge/Node.js-20.x-339933?style=for-the-badge&logo=node.js&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Express](https://img.shields.io/badge/Express-4.18.x-000000?style=for-the-badge&logo=express&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma-6.x-2D3748?style=for-the-badge&logo=prisma&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16.x-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![Vercel](https://img.shields.io/badge/Vercel-Serverless-000000?style=for-the-badge&logo=vercel&logoColor=white)
+
 API REST para gerenciamento de currículos profissionais. Este projeto é um backend headless que serve como uma única fonte de verdade para dados de currículo.
+
+## Índice
+
+- [Sobre](#sobre)
+- [Tecnologias](#tecnologias)
+- [Instalação](#instalação)
+- [Scripts](#scripts)
+- [Documentação](#documentação)
+- [Estrutura do Projeto](#estrutura-do-projeto)
+- [Testes](#testes)
+- [Deploy](#deploy)
+- [Contribuindo](#contribuindo)
+
+## Sobre
+
+O **Currículo Express** é uma API REST que gerencia, armazena e expõe dados de currículos de forma estruturada. Ele atua como um "Headless CMS" focado exclusivamente em currículos profissionais, permitindo que qualquer aplicação front-end (sites de portfólio, aplicações móveis, geradores de PDF) consuma esses dados de maneira programática.
+
+### Características Principais
+
+- **API RESTful** completa com CRUD para todas as entidades
+- **Autenticação Bearer Token** para proteger endpoints de escrita
+- **Validação Schema-First** usando Zod
+- **Type-Safety** completo com TypeScript e Prisma
+- **Arquitetura em Camadas** seguindo princípios SOLID e DRY
+- **Testes Unitários e de Integração** com Jest e Supertest
+- **Deploy Serverless** na Vercel
 
 ## Tecnologias
 
@@ -13,66 +46,47 @@ API REST para gerenciamento de currículos profissionais. Este projeto é um bac
 - **Testes:** Jest 29.x, Supertest 6.x
 - **Deploy:** Vercel (Serverless)
 
-## Estrutura do Projeto
-
-```
-resume-express-api/
-├── prisma/
-│   ├── schema.prisma       # Definição do modelo de dados
-│   ├── migrations/         # Migrações SQL geradas pelo Prisma
-│   └── seed.ts             # Script de seed para popular o banco
-├── src/
-│   ├── config/             # Configuração (database, env)
-│   ├── controllers/        # Camada de Controladores
-│   ├── dtos/              # DTOs (Data Transfer Objects) - Zod schemas
-│   ├── interfaces/        # Interfaces TypeScript
-│   ├── middlewares/       # Middlewares (error, validation, auth)
-│   ├── repositories/      # Camada de Repositórios
-│   ├── routes/            # Definição das rotas da API
-│   ├── services/          # Camada de Serviços (Lógica de Negócios)
-│   ├── app.ts             # Criação e configuração do app Express
-│   └── server.ts          # Ponto de entrada: inicializa o servidor
-├── tests/
-│   ├── integration/       # Testes de Integração (Jest + Supertest)
-│   ├── unit/              # Testes Unitários (Jest + Mocks)
-│   └── setup.ts           # Configuração global de testes
-├── .env                   # Variáveis de ambiente (secretas)
-├── .env.example           # Template das variáveis de ambiente
-├── .eslintrc.js           # Configuração do ESLint
-├── .prettierrc            # Configuração do Prettier
-├── jest.config.js         # Configuração do Jest
-├── tsconfig.json          # Configuração do TypeScript
-└── package.json
-```
-
 ## Instalação
 
-1. Clone o repositório:
-```bash
-git clone <repository-url>
-cd resume-express-api
-```
+### Pré-requisitos
 
-2. Instale as dependências:
-```bash
-npm install
-```
+- Node.js 20.x ou superior
+- PostgreSQL 16.x ou superior
+- npm ou yarn
 
-3. Configure as variáveis de ambiente:
-```bash
-cp .env.example .env
-```
+### Passos
 
-Edite o arquivo `.env` e configure:
-- `DATABASE_URL`: URL de conexão do PostgreSQL (obrigatório)
-- `API_SECRET_KEY`: Chave secreta para autenticação da API (obrigatório)
-- `PORT`: Porta do servidor (opcional, padrão: 3000)
-- `NODE_ENV`: Ambiente (opcional, padrão: development)
-- `DATABASE_URL_TEST`: URL de conexão do PostgreSQL para testes (opcional)
+1. **Clone o repositório:**
 
-**Nota:** As variáveis de ambiente obrigatórias são validadas na inicialização da aplicação. Se alguma variável obrigatória não for encontrada, a aplicação lançará um erro.
+   ```bash
+   git clone <repository-url>
+   cd resume-express-api
+   ```
 
-4. Configure o banco de dados:
+2. **Instale as dependências:**
+
+   ```bash
+   npm install
+   ```
+
+3. **Configure as variáveis de ambiente:**
+
+   ```bash
+   cp .env.example .env
+   ```
+
+   Edite o arquivo `.env` e configure:
+
+   - `DATABASE_URL`: URL de conexão do PostgreSQL (obrigatório)
+   - `API_SECRET_KEY`: Chave secreta para autenticação da API (obrigatório)
+   - `PORT`: Porta do servidor (opcional, padrão: 3000)
+   - `NODE_ENV`: Ambiente (opcional, padrão: development)
+   - `DATABASE_URL_TEST`: URL de conexão do PostgreSQL para testes (opcional)
+
+   **Nota:** As variáveis de ambiente obrigatórias são validadas na inicialização da aplicação. Se alguma variável obrigatória não for encontrada, a aplicação lançará um erro.
+
+4. **Configure o banco de dados:**
+
 ```bash
 # Gerar o Prisma Client
 npm run prisma:generate
@@ -85,1124 +99,123 @@ npm run prisma:seed
 ```
 
 **Nota:** O script de seed cria dados de exemplo incluindo:
+
 - 10 skills comuns (TypeScript, React.js, Node.js, Prisma, PostgreSQL, Figma, Design System, User Research, UX Writing, Docker)
 - Pessoa João Silva (Desenvolvedor Full-Stack Sênior) com currículo completo
 - Pessoa Mariana Costa (Product Designer Sênior) com currículo completo
 
-## Scripts Disponíveis
+## Scripts
+
+### Desenvolvimento
 
 - `npm run dev`: Inicia o servidor em modo desenvolvimento com hot-reload
 - `npm run build`: Compila o TypeScript para JavaScript
 - `npm start`: Inicia o servidor em produção
+
+### Executar Testes
+
 - `npm test`: Executa todos os testes
 - `npm run test:unit`: Executa apenas testes unitários
 - `npm run test:integration`: Executa apenas testes de integração
 - `npm run test:watch`: Executa testes em modo watch
 - `npm run test:coverage`: Gera relatório de cobertura de testes
+
+### Qualidade de Código
+
 - `npm run lint`: Verifica erros de lint
 - `npm run lint:fix`: Corrige erros de lint automaticamente
 - `npm run format`: Formata o código com Prettier
 - `npm run format:check`: Verifica se o código está formatado
+
+### Prisma
+
 - `npm run prisma:generate`: Gera o Prisma Client
 - `npm run prisma:migrate`: Executa migrações do banco de dados
 - `npm run prisma:seed`: Popula o banco com dados de exemplo
 - `npm run prisma:studio`: Abre o Prisma Studio (GUI para o banco)
 
-## Arquitetura
+## Documentação
+
+A documentação completa do projeto está disponível na pasta `docs/`:
+
+- **[Documentação da API](./docs/API.md)**: Documentação completa de todos os endpoints, autenticação, exemplos de requisições e respostas
+- **[Documentação da Arquitetura](./docs/ARQUITETURA.md)**: Documentação completa da arquitetura da aplicação, padrões de design, fluxo de dados e decisões técnicas
+- **[Changelog](./docs/CHANGELOG.md)**: Histórico de mudanças do projeto
+
+### Coleção Postman
+
+O projeto inclui uma coleção Postman completa (`docs/CurriculoExpress.postman_collection.json`) que documenta e permite testar todos os endpoints da API.
+
+**Como usar:**
+
+1. Importe a coleção no Postman
+2. Configure as variáveis de ambiente:
+   - `BASE_URL`: URL base da API (ex: `http://localhost:3000`)
+   - `AUTH_TOKEN`: Token de autenticação (valor da variável `API_SECRET_KEY`)
+3. Teste os endpoints navegando pelas pastas organizadas por entidade
+
+## Estrutura do Projeto
+
+```text
+resume-express-api/
+├── api/
+│   └── index.ts                    # Entry point para Vercel (serverless)
+├── prisma/
+│   ├── schema.prisma               # Definição do modelo de dados
+│   ├── migrations/                 # Migrações SQL geradas pelo Prisma
+│   └── seed.ts                     # Script de seed para popular o banco
+├── src/
+│   ├── config/                     # Configuração (database, env)
+│   ├── controllers/                # Camada de Controladores
+│   ├── dtos/                       # DTOs (Data Transfer Objects) - Zod schemas
+│   ├── interfaces/                 # Interfaces TypeScript
+│   ├── middlewares/                # Middlewares (error, validation, auth)
+│   ├── repositories/               # Camada de Repositórios
+│   ├── routes/                     # Definição das rotas da API
+│   ├── services/                   # Camada de Serviços (Lógica de Negócios)
+│   ├── app.ts                      # Criação e configuração do app Express
+│   └── server.ts                   # Ponto de entrada: inicializa o servidor
+├── tests/
+│   ├── integration/                # Testes de Integração (Jest + Supertest)
+│   ├── unit/                       # Testes Unitários (Jest + Mocks)
+│   ├── helpers/                    # Helpers para testes
+│   └── setup.ts                    # Configuração global de testes
+├── docs/
+│   ├── API.md                      # Documentação da API
+│   ├── ARQUITETURA.md              # Documentação da Arquitetura
+│   ├── CHANGELOG.md                # Changelog do projeto
+│   └── CurriculoExpress.postman_collection.json
+├── .env                            # Variáveis de ambiente (não versionado)
+├── .env.example                    # Template das variáveis de ambiente
+├── vercel.json                     # Configuração do deploy Vercel
+├── tsconfig.json                   # Configuração do TypeScript
+├── jest.config.js                  # Configuração do Jest
+└── package.json                    # Dependências e scripts
+```
+
+### Arquitetura
 
 O projeto segue uma **Arquitetura em Camadas (Layered Architecture)**:
 
 1. **Routes Layer** (`src/routes`): Define as rotas da API
-2. **Controllers Layer** (`src/controllers`): Orquestra as chamadas para a camada de serviços
-3. **Services Layer** (`src/services`): Contém a lógica de negócios
-4. **Repositories Layer** (`src/repositories`): Abstrai o acesso ao banco de dados (única camada que usa Prisma)
-
-### Fluxo de Requisição
-
-1. Request HTTP → Routes
-2. Routes → Middleware de Validação (Zod)
-3. Middleware → Controller
-4. Controller → Service
-5. Service → Repository
-6. Repository → Prisma Client → Database
-7. Resposta retorna pela mesma cadeia
-8. Em caso de erro → Middleware de Error Handler
-
-### Middlewares
-
-O projeto implementa os seguintes middlewares globais:
-
-- **Error Handler** (`src/middlewares/error.middleware.ts`): Trata erros de forma centralizada, incluindo:
-  - Erros de validação Zod (400)
-  - Erros do Prisma (P2002, P2025, P2003, P2004, etc.)
-  - Erros customizados da aplicação (ex: `NotFoundError` - 404)
-  - Logs de erro em desenvolvimento
-
-- **Validation Middleware** (`src/middlewares/validation.middleware.ts`): Validação genérica usando Zod:
-  - Suporta validação de body, query e params separadamente
-  - Suporta schema único para validação do body
-  - Propaga erros de validação para o error handler
-
-- **Authentication Middleware** (`src/middlewares/auth.middleware.ts`): Autenticação Bearer Token:
-  - Protege todos os endpoints de escrita (POST, PUT, DELETE)
-  - Valida o Bearer Token no header Authorization
-  - Retorna 401 quando header está ausente ou formato é inválido
-  - Retorna 403 quando token é inválido ou expirado
-  - Endpoints de leitura (GET) permanecem públicos
-
-## Autenticação
-
-A API utiliza autenticação via Bearer Token para proteger endpoints de escrita (POST, PUT, DELETE). Endpoints de leitura (GET) são públicos e não requerem autenticação.
-
-### Como Autenticar
-
-Inclua o header `Authorization` com o formato Bearer Token em todas as requisições de escrita:
-
-```
-Authorization: Bearer <API_SECRET_KEY>
-```
-
-**Exemplo:**
-```bash
-curl -X POST https://api.example.com/api/v1/people \
-  -H "Authorization: Bearer sua-api-secret-key-aqui" \
-  -H "Content-Type: application/json" \
-  -d '{"full_name": "João Silva", "headline": "Desenvolvedor", "summary": "Resumo profissional"}'
-```
-
-### Endpoints Protegidos
-
-Todos os endpoints de escrita requerem autenticação:
-- `POST /api/v1/*` - Criar recursos
-- `PUT /api/v1/*` - Atualizar recursos
-- `DELETE /api/v1/*` - Deletar recursos
-- `POST /api/v1/people/associate-skill` - Associar skill
-- `POST /api/v1/people/disassociate-skill` - Desassociar skill
-
-### Endpoints Públicos
-
-Endpoints de leitura não requerem autenticação:
-- `GET /api/v1/*` - Listar e buscar recursos
-- `GET /api/v1/health` - Health check
-
-### Respostas de Erro de Autenticação
-
-**401 Unauthorized - Header ausente:**
-```json
-{
-  "status": "error",
-  "message": "Authorization header is required"
-}
-```
-
-**401 Unauthorized - Formato inválido:**
-```json
-{
-  "status": "error",
-  "message": "Invalid authorization format. Expected: Bearer <token>"
-}
-```
-
-**403 Forbidden - Token inválido:**
-```json
-{
-  "status": "error",
-  "message": "Invalid or expired token"
-}
-```
-
-## Endpoints
-
-### Health Check
-
-- `GET /api/v1/health`: Retorna o status da API
-
-**Resposta de Sucesso (200):**
-```json
-{
-  "status": "ok",
-  "timestamp": "2024-01-01T00:00:00.000Z",
-  "uptime": 123.456
-}
-```
-
-### Rota Raiz
-
-- `GET /`: Retorna informações básicas da API
-
-**Resposta de Sucesso (200):**
-```json
-{
-  "message": "Currículo Express API",
-  "version": "1.0.0",
-  "status": "running"
-}
-```
-
-### People (Pessoas)
-
-#### Listar Todas as Pessoas
-
-- `GET /api/v1/people`: Lista todas as pessoas cadastradas
-
-**Resposta de Sucesso (200):**
-```json
-[
-  {
-    "id": "clxmg9v4o000008l4f3h3g3q3",
-    "full_name": "João Silva",
-    "headline": "Desenvolvedor Full-Stack Sênior",
-    "summary": "Engenheiro de software com 8 anos de experiência...",
-    "location": "São Paulo, Brasil",
-    "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
-  }
-]
-```
-
-#### Buscar Pessoa por ID
-
-- `GET /api/v1/people/:id`: Busca uma pessoa específica pelo ID
-
-**Parâmetros:**
-- `id` (string, obrigatório): ID da pessoa (cuid)
-
-**Resposta de Sucesso (200):**
-```json
-{
-  "id": "clxmg9v4o000008l4f3h3g3q3",
-  "full_name": "João Silva",
-  "headline": "Desenvolvedor Full-Stack Sênior",
-  "summary": "Engenheiro de software com 8 anos de experiência...",
-  "location": "São Paulo, Brasil",
-  "createdAt": "2024-01-01T00:00:00.000Z",
-  "updatedAt": "2024-01-01T00:00:00.000Z"
-}
-```
-
-**Resposta de Erro (404):**
-```json
-{
-  "status": "error",
-  "message": "Person not found"
-}
-```
-
-#### Buscar Pessoa Completa por ID (Currículo Agregado)
-
-- `GET /api/v1/people/:id/full`: Busca uma pessoa pelo ID com todas as suas relações incluídas (currículo completo)
-
-**Parâmetros:**
-- `id` (string, obrigatório): ID da pessoa (cuid)
-
-**Descrição:**
-Este endpoint retorna uma pessoa com todas as suas relações incluídas em uma única chamada HTTP. Utiliza eager-loading do Prisma para otimizar a consulta ao banco de dados, buscando todas as relações em uma única query.
-
-**Resposta de Sucesso (200):**
-```json
-{
-  "id": "clxmg9v4o000008l4f3h3g3q3",
-  "full_name": "João Silva",
-  "headline": "Desenvolvedor Full-Stack Sênior",
-  "summary": "Engenheiro de software com 8 anos de experiência...",
-  "location": "São Paulo, Brasil",
-  "createdAt": "2024-01-01T00:00:00.000Z",
-  "updatedAt": "2024-01-01T00:00:00.000Z",
-  "contacts": [
-    {
-      "id": "clxmg9v4o000008l4f3h3g4q4",
-      "type": "email",
-      "value": "joao@example.com",
-      "peopleId": "clxmg9v4o000008l4f3h3g3q3",
-      "createdAt": "2024-01-01T00:00:00.000Z"
-    },
-    {
-      "id": "clxmg9v4o000008l4f3h3g5q5",
-      "type": "phone",
-      "value": "+55 11 98765-4321",
-      "peopleId": "clxmg9v4o000008l4f3h3g3q3",
-      "createdAt": "2024-01-01T00:00:00.000Z"
-    }
-  ],
-  "education": [
-    {
-      "id": "clxmg9v4o000008l4f3h3g6q6",
-      "institution": "Universidade de São Paulo",
-      "degree": "Bacharelado em Ciência da Computação",
-      "field_of_study": "Ciência da Computação",
-      "start_date": "2010-01-01T00:00:00.000Z",
-      "end_date": "2014-12-31T23:59:59.999Z",
-      "description": null,
-      "peopleId": "clxmg9v4o000008l4f3h3g3q3",
-      "createdAt": "2024-01-01T00:00:00.000Z"
-    }
-  ],
-  "experience": [
-    {
-      "id": "clxmg9v4o000008l4f3h3g7q7",
-      "company": "Tech Corp",
-      "position": "Desenvolvedor Full-Stack",
-      "start_date": "2015-01-01T00:00:00.000Z",
-      "end_date": "2020-12-31T23:59:59.999Z",
-      "description": "Desenvolvimento de aplicações web escaláveis.",
-      "location": null,
-      "peopleId": "clxmg9v4o000008l4f3h3g3q3",
-      "createdAt": "2024-01-01T00:00:00.000Z"
-    }
-  ],
-  "projects": [
-    {
-      "id": "clxmg9v4o000008l4f3h3g8q8",
-      "name": "Projeto API",
-      "description": "API RESTful para gerenciamento de dados",
-      "url": "https://example.com/project",
-      "repository_url": null,
-      "start_date": "2021-01-01T00:00:00.000Z",
-      "end_date": null,
-      "peopleId": "clxmg9v4o000008l4f3h3g3q3",
-      "createdAt": "2024-01-01T00:00:00.000Z"
-    }
-  ],
-  "certifications": [
-    {
-      "id": "clxmg9v4o000008l4f3h3g9q9",
-      "name": "AWS Certified Developer",
-      "issuer": "AWS",
-      "issue_date": "2022-01-01T00:00:00.000Z",
-      "url": "https://aws.amazon.com/certification",
-      "peopleId": "clxmg9v4o000008l4f3h3g3q3",
-      "createdAt": "2024-01-01T00:00:00.000Z"
-    }
-  ],
-  "languages": [
-    {
-      "id": "clxmg9v4o000008l4f3h3gaqa",
-      "name": "Português",
-      "proficiency": "Nativo",
-      "peopleId": "clxmg9v4o000008l4f3h3g3q3",
-      "createdAt": "2024-01-01T00:00:00.000Z"
-    }
-  ],
-  "social_links": [
-    {
-      "id": "clxmg9v4o000008l4f3h3gbqb",
-      "platform": "linkedin",
-      "url": "https://linkedin.com/in/joaosilva",
-      "peopleId": "clxmg9v4o000008l4f3h3g3q3",
-      "createdAt": "2024-01-01T00:00:00.000Z"
-    }
-  ],
-  "skills": [
-    {
-      "id": "clxmg9v4o000008l4f3h3gcqc",
-      "name": "TypeScript",
-      "createdAt": "2024-01-01T00:00:00.000Z",
-      "updatedAt": "2024-01-01T00:00:00.000Z"
-    }
-  ]
-}
-```
-
-**Notas:**
-- Todas as relações são retornadas como arrays, mesmo que estejam vazios
-- O endpoint é público (não requer autenticação)
-- Utiliza eager-loading para otimizar a performance, buscando todas as relações em uma única consulta ao banco de dados
-- Retorna todas as 8 relações: `contacts`, `education`, `experience`, `projects`, `certifications`, `languages`, `social_links`, `skills`
-
-**Resposta de Erro (404):**
-```json
-{
-  "status": "error",
-  "message": "Person not found"
-}
-```
-
-**Resposta de Erro (400):**
-```json
-{
-  "status": "error",
-  "message": "Validation failed",
-  "errors": [
-    {
-      "code": "invalid_string",
-      "path": ["params", "id"],
-      "message": "ID inválido"
-    }
-  ]
-}
-```
-
-#### Criar Nova Pessoa
-
-- `POST /api/v1/people`: Cria uma nova pessoa
-
-**Autenticação:** Requerida (Bearer Token)
-
-**Body (JSON):**
-```json
-{
-  "full_name": "João Silva",
-  "headline": "Desenvolvedor Full-Stack Sênior",
-  "summary": "Engenheiro de software com 8 anos de experiência na construção de aplicações web escaláveis.",
-  "location": "São Paulo, Brasil"
-}
-```
-
-**Campos:**
-- `full_name` (string, obrigatório): Nome completo (mínimo 3 caracteres, máximo 255)
-- `headline` (string, obrigatório): Título profissional (mínimo 3 caracteres, máximo 255)
-- `summary` (string, obrigatório): Resumo profissional (mínimo 10 caracteres)
-- `location` (string, opcional): Localização (máximo 255 caracteres)
-
-**Resposta de Sucesso (201):**
-```json
-{
-  "id": "clxmg9v4o000008l4f3h3g3q3",
-  "full_name": "João Silva",
-  "headline": "Desenvolvedor Full-Stack Sênior",
-  "summary": "Engenheiro de software com 8 anos de experiência...",
-  "location": "São Paulo, Brasil",
-  "createdAt": "2024-01-01T00:00:00.000Z",
-  "updatedAt": "2024-01-01T00:00:00.000Z"
-}
-```
-
-**Resposta de Erro (400) - Validação:**
-```json
-{
-  "status": "error",
-  "message": "Validation failed",
-  "errors": [
-    {
-      "code": "too_small",
-      "path": ["body", "full_name"],
-      "message": "Nome completo deve ter pelo menos 3 caracteres"
-    }
-  ]
-}
-```
-
-#### Atualizar Pessoa
-
-- `PUT /api/v1/people/:id`: Atualiza uma pessoa existente
-
-**Autenticação:** Requerida (Bearer Token)
-
-**Parâmetros:**
-- `id` (string, obrigatório): ID da pessoa (cuid)
-
-**Body (JSON) - Todos os campos são opcionais:**
-```json
-{
-  "headline": "Desenvolvedor Full-Stack Sênior | Node.js & TypeScript",
-  "location": "Rio de Janeiro, Brasil"
-}
-```
-
-**Campos:**
-- `full_name` (string, opcional): Nome completo (mínimo 3 caracteres, máximo 255)
-- `headline` (string, opcional): Título profissional (mínimo 3 caracteres, máximo 255)
-- `summary` (string, opcional): Resumo profissional (mínimo 10 caracteres)
-- `location` (string, opcional): Localização (máximo 255 caracteres)
-
-**Resposta de Sucesso (200):**
-```json
-{
-  "id": "clxmg9v4o000008l4f3h3g3q3",
-  "full_name": "João Silva",
-  "headline": "Desenvolvedor Full-Stack Sênior | Node.js & TypeScript",
-  "summary": "Engenheiro de software com 8 anos de experiência...",
-  "location": "Rio de Janeiro, Brasil",
-  "createdAt": "2024-01-01T00:00:00.000Z",
-  "updatedAt": "2024-01-01T12:00:00.000Z"
-}
-```
-
-**Resposta de Erro (404):**
-```json
-{
-  "status": "error",
-  "message": "Person not found"
-}
-```
-
-#### Deletar Pessoa
-
-- `DELETE /api/v1/people/:id`: Deleta uma pessoa e todos os seus dados relacionados (cascata)
-
-**Autenticação:** Requerida (Bearer Token)
-
-**Parâmetros:**
-- `id` (string, obrigatório): ID da pessoa (cuid)
-
-**Resposta de Sucesso (204):** Sem conteúdo
-
-**Resposta de Erro (404):**
-```json
-{
-  "status": "error",
-  "message": "Person not found"
-}
-```
-
-### Experience (Experiências Profissionais)
-
-#### Criar Nova Experiência
-
-- `POST /api/v1/experience`: Cria uma nova experiência profissional
-
-**Autenticação:** Requerida (Bearer Token)
-
-**Body (JSON):**
-```json
-{
-  "peopleId": "clxmg9v4o000008l4f3h3g3q3",
-  "company": "Tech Corp",
-  "position": "Desenvolvedor Full-Stack",
-  "start_date": "2020-01-01T00:00:00.000Z",
-  "end_date": "2022-12-31T23:59:59.999Z",
-  "description": "Desenvolvimento de aplicações web escaláveis usando React e Node.js",
-  "location": "São Paulo, Brasil"
-}
-```
-
-**Campos:**
-- `peopleId` (string, obrigatório): ID da pessoa (cuid)
-- `company` (string, obrigatório): Nome da empresa (mínimo 2 caracteres, máximo 255)
-- `position` (string, obrigatório): Cargo ocupado (mínimo 2 caracteres, máximo 255)
-- `start_date` (string, obrigatório): Data de início (formato ISO 8601)
-- `end_date` (string, opcional): Data de término (formato ISO 8601, null se for o emprego atual)
-- `description` (string, opcional): Descrição da experiência
-- `location` (string, opcional): Localização (máximo 255 caracteres)
-
-**Resposta de Sucesso (201):** Retorna o objeto Experience criado
-
-**Resposta de Erro (404):** Se `peopleId` não existir
-
-#### Buscar Experiência por ID
-
-- `GET /api/v1/experience/:id`: Busca uma experiência específica pelo ID
-
-**Parâmetros:**
-- `id` (string, obrigatório): ID da experiência (cuid)
-
-**Resposta de Sucesso (200):** Retorna o objeto Experience
-
-**Resposta de Erro (404):** Se a experiência não existir
-
-#### Atualizar Experiência
-
-- `PUT /api/v1/experience/:id`: Atualiza uma experiência existente
-
-**Autenticação:** Requerida (Bearer Token)
-
-**Parâmetros:**
-- `id` (string, obrigatório): ID da experiência (cuid)
-
-**Body (JSON) - Todos os campos são opcionais:**
-```json
-{
-  "company": "New Tech Corp",
-  "position": "Desenvolvedor Full-Stack Sênior",
-  "description": "Nova descrição"
-}
-```
-
-**Resposta de Sucesso (200):** Retorna o objeto Experience atualizado
-
-**Resposta de Erro (404):** Se a experiência não existir
-
-#### Deletar Experiência
-
-- `DELETE /api/v1/experience/:id`: Deleta uma experiência
-
-**Autenticação:** Requerida (Bearer Token)
-
-**Parâmetros:**
-- `id` (string, obrigatório): ID da experiência (cuid)
-
-**Resposta de Sucesso (204):** Sem conteúdo
-
-**Resposta de Erro (404):** Se a experiência não existir
-
-### Education (Formação Acadêmica)
-
-#### Criar Nova Educação
-
-- `POST /api/v1/education`: Cria uma nova formação acadêmica
-
-**Autenticação:** Requerida (Bearer Token)
-
-**Body (JSON):**
-```json
-{
-  "peopleId": "clxmg9v4o000008l4f3h3g3q3",
-  "institution": "Universidade Federal",
-  "degree": "Bacharelado em Ciência da Computação",
-  "field_of_study": "Ciência da Computação",
-  "start_date": "2015-01-01T00:00:00.000Z",
-  "end_date": "2019-12-31T23:59:59.999Z",
-  "description": "Formação com foco em desenvolvimento de software"
-}
-```
-
-**Campos:**
-- `peopleId` (string, obrigatório): ID da pessoa (cuid)
-- `institution` (string, obrigatório): Nome da instituição (mínimo 2 caracteres, máximo 255)
-- `degree` (string, obrigatório): Grau obtido (mínimo 2 caracteres, máximo 255)
-- `field_of_study` (string, opcional): Área de estudo (máximo 255 caracteres)
-- `start_date` (string, obrigatório): Data de início (formato ISO 8601)
-- `end_date` (string, opcional): Data de término (formato ISO 8601, null se estiver cursando)
-- `description` (string, opcional): Descrição adicional
-
-**Resposta de Sucesso (201):** Retorna o objeto Education criado
-
-#### Buscar Educação por ID
-
-- `GET /api/v1/education/:id`: Busca uma educação específica pelo ID
-
-**Parâmetros:**
-- `id` (string, obrigatório): ID da educação (cuid)
-
-**Resposta de Sucesso (200):** Retorna o objeto Education
-
-#### Atualizar Educação
-
-- `PUT /api/v1/education/:id`: Atualiza uma educação existente
-
-**Autenticação:** Requerida (Bearer Token)
-
-**Parâmetros:**
-- `id` (string, obrigatório): ID da educação (cuid)
-
-**Body (JSON) - Todos os campos são opcionais**
-
-**Resposta de Sucesso (200):** Retorna o objeto Education atualizado
-
-#### Deletar Educação
-
-- `DELETE /api/v1/education/:id`: Deleta uma educação
-
-**Autenticação:** Requerida (Bearer Token)
-
-**Parâmetros:**
-- `id` (string, obrigatório): ID da educação (cuid)
-
-**Resposta de Sucesso (204):** Sem conteúdo
-
-### Projects (Projetos)
-
-#### Criar Novo Projeto
-
-- `POST /api/v1/projects`: Cria um novo projeto
-
-**Autenticação:** Requerida (Bearer Token)
-
-**Body (JSON):**
-```json
-{
-  "peopleId": "clxmg9v4o000008l4f3h3g3q3",
-  "name": "Portfolio Website",
-  "description": "Site de portfólio pessoal desenvolvido com React e TypeScript",
-  "url": "https://joaosilva.dev",
-  "repository_url": "https://github.com/joaosilva/portfolio",
-  "start_date": "2023-01-01T00:00:00.000Z",
-  "end_date": "2023-06-30T23:59:59.999Z"
-}
-```
-
-**Campos:**
-- `peopleId` (string, obrigatório): ID da pessoa (cuid)
-- `name` (string, obrigatório): Nome do projeto (mínimo 2 caracteres, máximo 255)
-- `description` (string, obrigatório): Descrição do projeto (mínimo 10 caracteres)
-- `url` (string, opcional): URL do projeto (deve ser uma URL válida)
-- `repository_url` (string, opcional): URL do repositório (deve ser uma URL válida)
-- `start_date` (string, obrigatório): Data de início (formato ISO 8601)
-- `end_date` (string, opcional): Data de término (formato ISO 8601)
-
-**Resposta de Sucesso (201):** Retorna o objeto Projects criado
-
-#### Buscar Projeto por ID
-
-- `GET /api/v1/projects/:id`: Busca um projeto específico pelo ID
-
-**Parâmetros:**
-- `id` (string, obrigatório): ID do projeto (cuid)
-
-**Resposta de Sucesso (200):** Retorna o objeto Projects
-
-#### Atualizar Projeto
-
-- `PUT /api/v1/projects/:id`: Atualiza um projeto existente
-
-**Autenticação:** Requerida (Bearer Token)
-
-**Parâmetros:**
-- `id` (string, obrigatório): ID do projeto (cuid)
-
-**Body (JSON) - Todos os campos são opcionais**
-
-**Resposta de Sucesso (200):** Retorna o objeto Projects atualizado
-
-#### Deletar Projeto
-
-- `DELETE /api/v1/projects/:id`: Deleta um projeto
-
-**Autenticação:** Requerida (Bearer Token)
-
-**Parâmetros:**
-- `id` (string, obrigatório): ID do projeto (cuid)
-
-**Resposta de Sucesso (204):** Sem conteúdo
-
-### Contacts (Contatos)
-
-#### Criar Novo Contato
-
-- `POST /api/v1/contacts`: Cria um novo contato
-
-**Autenticação:** Requerida (Bearer Token)
-
-**Body (JSON):**
-```json
-{
-  "peopleId": "clxmg9v4o000008l4f3h3g3q3",
-  "type": "email",
-  "value": "joao.silva@email.com"
-}
-```
-
-**Campos:**
-- `peopleId` (string, obrigatório): ID da pessoa (cuid)
-- `type` (string, obrigatório): Tipo de contato (ex: "email", "phone", "website")
-- `value` (string, obrigatório): Valor do contato
-
-**Resposta de Sucesso (201):** Retorna o objeto Contacts criado
-
-#### Buscar Contato por ID
-
-- `GET /api/v1/contacts/:id`: Busca um contato específico pelo ID
-
-**Parâmetros:**
-- `id` (string, obrigatório): ID do contato (cuid)
-
-**Resposta de Sucesso (200):** Retorna o objeto Contacts
-
-#### Atualizar Contato
-
-- `PUT /api/v1/contacts/:id`: Atualiza um contato existente
-
-**Autenticação:** Requerida (Bearer Token)
-
-**Parâmetros:**
-- `id` (string, obrigatório): ID do contato (cuid)
-
-**Body (JSON) - Todos os campos são opcionais**
-
-**Resposta de Sucesso (200):** Retorna o objeto Contacts atualizado
-
-#### Deletar Contato
-
-- `DELETE /api/v1/contacts/:id`: Deleta um contato
-
-**Autenticação:** Requerida (Bearer Token)
-
-**Parâmetros:**
-- `id` (string, obrigatório): ID do contato (cuid)
-
-**Resposta de Sucesso (204):** Sem conteúdo
-
-### SocialLinks (Links Sociais)
-
-#### Criar Novo Link Social
-
-- `POST /api/v1/social-links`: Cria um novo link social
-
-**Autenticação:** Requerida (Bearer Token)
-
-**Body (JSON):**
-```json
-{
-  "peopleId": "clxmg9v4o000008l4f3h3g3q3",
-  "platform": "linkedin",
-  "url": "https://linkedin.com/in/joaosilva"
-}
-```
-
-**Campos:**
-- `peopleId` (string, obrigatório): ID da pessoa (cuid)
-- `platform` (string, obrigatório): Plataforma (ex: "linkedin", "github", "twitter")
-- `url` (string, obrigatório): URL do perfil (deve ser uma URL válida)
-
-**Resposta de Sucesso (201):** Retorna o objeto SocialLinks criado
-
-#### Buscar Link Social por ID
-
-- `GET /api/v1/social-links/:id`: Busca um link social específico pelo ID
-
-**Parâmetros:**
-- `id` (string, obrigatório): ID do link social (cuid)
-
-**Resposta de Sucesso (200):** Retorna o objeto SocialLinks
-
-#### Atualizar Link Social
-
-- `PUT /api/v1/social-links/:id`: Atualiza um link social existente
-
-**Autenticação:** Requerida (Bearer Token)
-
-**Parâmetros:**
-- `id` (string, obrigatório): ID do link social (cuid)
-
-**Body (JSON) - Todos os campos são opcionais**
-
-**Resposta de Sucesso (200):** Retorna o objeto SocialLinks atualizado
-
-#### Deletar Link Social
-
-- `DELETE /api/v1/social-links/:id`: Deleta um link social
-
-**Autenticação:** Requerida (Bearer Token)
-
-**Parâmetros:**
-- `id` (string, obrigatório): ID do link social (cuid)
-
-**Resposta de Sucesso (204):** Sem conteúdo
-
-### Languages (Idiomas)
-
-#### Criar Novo Idioma
-
-- `POST /api/v1/languages`: Cria um novo idioma
-
-**Autenticação:** Requerida (Bearer Token)
-
-**Body (JSON):**
-```json
-{
-  "peopleId": "clxmg9v4o000008l4f3h3g3q3",
-  "name": "Inglês",
-  "proficiency": "Fluente (C1)"
-}
-```
-
-**Campos:**
-- `peopleId` (string, obrigatório): ID da pessoa (cuid)
-- `name` (string, obrigatório): Nome do idioma
-- `proficiency` (string, obrigatório): Nível de proficiência
-
-**Resposta de Sucesso (201):** Retorna o objeto Languages criado
-
-#### Buscar Idioma por ID
-
-- `GET /api/v1/languages/:id`: Busca um idioma específico pelo ID
-
-**Parâmetros:**
-- `id` (string, obrigatório): ID do idioma (cuid)
-
-**Resposta de Sucesso (200):** Retorna o objeto Languages
-
-#### Atualizar Idioma
-
-- `PUT /api/v1/languages/:id`: Atualiza um idioma existente
-
-**Autenticação:** Requerida (Bearer Token)
-
-**Parâmetros:**
-- `id` (string, obrigatório): ID do idioma (cuid)
-
-**Body (JSON) - Todos os campos são opcionais**
-
-**Resposta de Sucesso (200):** Retorna o objeto Languages atualizado
-
-#### Deletar Idioma
-
-- `DELETE /api/v1/languages/:id`: Deleta um idioma
-
-**Autenticação:** Requerida (Bearer Token)
-
-**Parâmetros:**
-- `id` (string, obrigatório): ID do idioma (cuid)
-
-**Resposta de Sucesso (204):** Sem conteúdo
-
-### Certifications (Certificações)
-
-#### Criar Nova Certificação
-
-- `POST /api/v1/certifications`: Cria uma nova certificação
-
-**Autenticação:** Requerida (Bearer Token)
-
-**Body (JSON):**
-```json
-{
-  "peopleId": "clxmg9v4o000008l4f3h3g3q3",
-  "name": "AWS Certified Solutions Architect",
-  "issuer": "AWS",
-  "issue_date": "2023-01-15T00:00:00.000Z",
-  "url": "https://aws.amazon.com/certification/"
-}
-```
-
-**Campos:**
-- `peopleId` (string, obrigatório): ID da pessoa (cuid)
-- `name` (string, obrigatório): Nome da certificação
-- `issuer` (string, obrigatório): Emissor da certificação
-- `issue_date` (string, obrigatório): Data de emissão (formato ISO 8601)
-- `url` (string, opcional): URL da certificação (deve ser uma URL válida)
-
-**Resposta de Sucesso (201):** Retorna o objeto Certifications criado
-
-#### Buscar Certificação por ID
-
-- `GET /api/v1/certifications/:id`: Busca uma certificação específica pelo ID
-
-**Parâmetros:**
-- `id` (string, obrigatório): ID da certificação (cuid)
-
-**Resposta de Sucesso (200):** Retorna o objeto Certifications
-
-#### Atualizar Certificação
-
-- `PUT /api/v1/certifications/:id`: Atualiza uma certificação existente
-
-**Autenticação:** Requerida (Bearer Token)
-
-**Parâmetros:**
-- `id` (string, obrigatório): ID da certificação (cuid)
-
-**Body (JSON) - Todos os campos são opcionais**
-
-**Resposta de Sucesso (200):** Retorna o objeto Certifications atualizado
-
-#### Deletar Certificação
-
-- `DELETE /api/v1/certifications/:id`: Deleta uma certificação
-
-**Autenticação:** Requerida (Bearer Token)
-
-**Parâmetros:**
-- `id` (string, obrigatório): ID da certificação (cuid)
-
-**Resposta de Sucesso (204):** Sem conteúdo
-
-#### Associar Skill a Pessoa
-
-- `POST /api/v1/people/associate-skill`: Associa uma skill a uma pessoa
-
-**Autenticação:** Requerida (Bearer Token)
-
-**Body (JSON):**
-```json
-{
-  "peopleId": "clxmg9v4o000008l4f3h3g3q3",
-  "skillId": "clxmg9v4o000008l4f3h3g4q4"
-}
-```
-
-**Campos:**
-- `peopleId` (string, obrigatório): ID da pessoa (cuid)
-- `skillId` (string, obrigatório): ID da skill (cuid)
-
-**Resposta de Sucesso (200):** Retorna o objeto People atualizado com a skill associada
-
-**Resposta de Erro (404):** Se `peopleId` ou `skillId` não existirem
-
-#### Desassociar Skill de Pessoa
-
-- `POST /api/v1/people/disassociate-skill`: Desassocia uma skill de uma pessoa
-
-**Autenticação:** Requerida (Bearer Token)
-
-**Body (JSON):**
-```json
-{
-  "peopleId": "clxmg9v4o000008l4f3h3g3q3",
-  "skillId": "clxmg9v4o000008l4f3h3g4q4"
-}
-```
-
-**Campos:**
-- `peopleId` (string, obrigatório): ID da pessoa (cuid)
-- `skillId` (string, obrigatório): ID da skill (cuid)
-
-**Resposta de Sucesso (200):** Retorna o objeto People atualizado sem a skill desassociada
-
-**Resposta de Erro (404):** Se `peopleId` ou `skillId` não existirem
-
-### Skills (Habilidades)
-
-#### Listar Todas as Skills
-
-- `GET /api/v1/skills`: Lista todas as skills cadastradas (ordenadas por nome)
-
-**Resposta de Sucesso (200):**
-```json
-[
-  {
-    "id": "clxmg9v4o000008l4f3h3g4q4",
-    "name": "TypeScript",
-    "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
-  },
-  {
-    "id": "clxmg9v4o000008l4f3h3g5q5",
-    "name": "React",
-    "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
-  }
-]
-```
-
-#### Buscar Skill por ID
-
-- `GET /api/v1/skills/:id`: Busca uma skill específica pelo ID
-
-**Parâmetros:**
-- `id` (string, obrigatório): ID da skill (cuid)
-
-**Resposta de Sucesso (200):**
-```json
-{
-  "id": "clxmg9v4o000008l4f3h3g4q4",
-  "name": "TypeScript",
-  "createdAt": "2024-01-01T00:00:00.000Z",
-  "updatedAt": "2024-01-01T00:00:00.000Z"
-}
-```
-
-**Resposta de Erro (404):**
-```json
-{
-  "status": "error",
-  "message": "Skill not found"
-}
-```
-
-#### Criar Nova Skill
-
-- `POST /api/v1/skills`: Cria uma nova skill
-
-**Autenticação:** Requerida (Bearer Token)
-
-**Body (JSON):**
-```json
-{
-  "name": "TypeScript"
-}
-```
-
-**Campos:**
-- `name` (string, obrigatório): Nome da skill (mínimo 2 caracteres, máximo 255, único)
-
-**Resposta de Sucesso (201):**
-```json
-{
-  "id": "clxmg9v4o000008l4f3h3g4q4",
-  "name": "TypeScript",
-  "createdAt": "2024-01-01T00:00:00.000Z",
-  "updatedAt": "2024-01-01T00:00:00.000Z"
-}
-```
-
-**Resposta de Erro (409) - Nome já existe:**
-```json
-{
-  "status": "error",
-  "message": "Skill with this name already exists"
-}
-```
-
-#### Atualizar Skill
-
-- `PUT /api/v1/skills/:id`: Atualiza uma skill existente
-
-**Autenticação:** Requerida (Bearer Token)
-
-**Parâmetros:**
-- `id` (string, obrigatório): ID da skill (cuid)
-
-**Body (JSON) - Campo opcional:**
-```json
-{
-  "name": "JavaScript"
-}
-```
-
-**Campos:**
-- `name` (string, opcional): Nome da skill (mínimo 2 caracteres, máximo 255, único)
-
-**Resposta de Sucesso (200):** Retorna o objeto Skill atualizado
-
-**Resposta de Erro (404):** Se a skill não existir
-
-**Resposta de Erro (409):** Se o novo nome já existir
-
-#### Deletar Skill
-
-- `DELETE /api/v1/skills/:id`: Deleta uma skill
-
-**Autenticação:** Requerida (Bearer Token)
-
-**Parâmetros:**
-- `id` (string, obrigatório): ID da skill (cuid)
-
-**Resposta de Sucesso (204):** Sem conteúdo
-
-**Resposta de Erro (404):** Se a skill não existir
-
-**Nota:** Todos os endpoints de entidades 1:N (Experience, Education, Projects, Contacts, SocialLinks, Languages, Certifications) seguem o mesmo padrão:
-- Requerem `peopleId` no body do POST para associar à pessoa
-- Retornam 404 se `peopleId` não existir
-- Suportam atualizações parciais no PUT
-- Retornam 204 (No Content) no DELETE bem-sucedido
-
-## Tratamento de Erros
-
-A API retorna erros padronizados no seguinte formato:
-
-```json
-{
-  "status": "error",
-  "message": "Descrição do erro",
-  "errors": [] // Apenas para erros de validação
-}
-```
-
-### Códigos de Status HTTP
-
-- `400`: Bad Request - Erro de validação (Zod) ou constraint do banco
-- `401`: Unauthorized - Header Authorization ausente ou formato inválido
-- `403`: Forbidden - Token de autenticação inválido ou expirado
-- `404`: Not Found - Registro não encontrado
-- `409`: Conflict - Violação de constraint única (ex: nome de skill duplicado)
-- `500`: Internal Server Error - Erro genérico do servidor ou banco de dados
-
-### Erros do Prisma Tratados
-
-- `P2002`: Unique constraint violation (409)
-- `P2025`: Record not found (404)
-- `P2003`: Foreign key constraint violation (400)
-- `P2004`: Invalid value for field type (400)
+2. **Middlewares** (`src/middlewares`): Validação, autenticação, tratamento de erros
+3. **Controllers Layer** (`src/controllers`): Orquestra as chamadas para a camada de serviços
+4. **Services Layer** (`src/services`): Contém a lógica de negócios
+5. **Repositories Layer** (`src/repositories`): Abstrai o acesso ao banco de dados (única camada que usa Prisma)
+
+Para mais detalhes sobre a arquitetura, consulte a [Documentação da Arquitetura](./docs/ARQUITETURA.md).
 
 ## Testes
 
 ### Testes Unitários
 
-Testam a lógica de negócios isoladamente, usando mocks do repositório com `jest-mock-extended`:
+Testam a lógica de negócios isoladamente, usando mocks do repositório:
 
 ```bash
 npm run test:unit
 ```
 
 **Localização:** `tests/unit/`
-
-**Exemplos:**
-- `tests/unit/health.controller.test.ts` - Testes do Health Controller
-- `tests/unit/people.service.test.ts` - Testes do People Service (100% de cobertura, incluindo método getPersonFullById)
-- `tests/unit/skills.service.test.ts` - Testes do Skills Service (100% de cobertura)
-- `tests/unit/auth.middleware.test.ts` - Testes do middleware de autenticação (todos os cenários de sucesso e falha)
 
 ### Testes de Integração
 
@@ -1214,68 +227,7 @@ npm run test:integration
 
 **Localização:** `tests/integration/`
 
-**Exemplos:**
-- `tests/integration/health.api.test.ts` - Testes da Health API
-- `tests/integration/people.api.test.ts` - Testes completos da People API (todos os endpoints CRUD, incluindo endpoint agregado GET /people/:id/full)
-- `tests/integration/experience.api.test.ts` - Testes completos da Experience API
-- `tests/integration/education.api.test.ts` - Testes completos da Education API
-- `tests/integration/projects.api.test.ts` - Testes completos da Projects API
-- `tests/integration/contacts.api.test.ts` - Testes completos da Contacts API
-- `tests/integration/social-links.api.test.ts` - Testes completos da SocialLinks API
-- `tests/integration/languages.api.test.ts` - Testes completos da Languages API
-- `tests/integration/certifications.api.test.ts` - Testes completos da Certifications API
-- `tests/integration/skills.api.test.ts` - Testes completos da Skills API
-- `tests/integration/people-associate-skill.api.test.ts` - Testes de associação/desassociação de skills
-- `tests/integration/auth.api.test.ts` - Testes de autenticação (rotas protegidas e públicas)
-
 **Nota:** Os testes de integração requerem um banco de dados de teste configurado em `DATABASE_URL_TEST` e a variável `API_SECRET_KEY` configurada.
-
-### Configuração de Testes
-
-O arquivo `tests/setup.ts` configura o ambiente de testes globalmente, incluindo:
-- Limpeza de mocks após cada teste
-- Configuração para uso de `jest-mock-extended` quando necessário
-
-## Coleção Postman
-
-O projeto inclui uma coleção Postman completa (`CurriculoExpress.postman_collection.json`) que documenta e permite testar todos os endpoints da API.
-
-### Como Usar
-
-1. **Importar a Coleção:**
-   - Abra o Postman
-   - Clique em "Import" e selecione o arquivo `CurriculoExpress.postman_collection.json`
-
-2. **Configurar Variáveis de Ambiente:**
-   - Na coleção, configure as variáveis:
-     - `BASE_URL`: URL base da API (ex: `http://localhost:3000` para local ou `https://sua-api.vercel.app` para produção)
-     - `AUTH_TOKEN`: Token de autenticação (valor da variável de ambiente `API_SECRET_KEY`)
-
-3. **Testar os Endpoints:**
-   - Navegue pelas pastas organizadas por entidade (People, Experience, Education, etc.)
-   - Todos os endpoints de escrita (POST, PUT, DELETE) já incluem o header `Authorization: Bearer {{AUTH_TOKEN}}`
-   - Os endpoints incluem exemplos de request body quando aplicável
-
-### Estrutura da Coleção
-
-A coleção está organizada em pastas por entidade:
-- **Health Check**: Endpoints de status da API
-- **People**: CRUD completo + endpoint agregado `/full` + associação/desassociação de skills
-- **Experience**: CRUD de experiências profissionais
-- **Education**: CRUD de formação acadêmica
-- **Projects**: CRUD de projetos
-- **Contacts**: CRUD de contatos
-- **Social Links**: CRUD de links sociais
-- **Languages**: CRUD de idiomas
-- **Certifications**: CRUD de certificações
-- **Skills**: CRUD de skills globais
-
-Cada endpoint inclui:
-- Método HTTP correto
-- URL com variáveis `{{BASE_URL}}`
-- Headers necessários (incluindo autenticação quando aplicável)
-- Exemplos de request body para POST e PUT
-- Descrições detalhadas
 
 ## Deploy
 
@@ -1293,7 +245,7 @@ Configure as seguintes variáveis de ambiente no painel da Vercel:
 - `API_SECRET_KEY`: Chave secreta para autenticação da API (obrigatório)
 - `NODE_ENV`: Ambiente (opcional, padrão: production)
 
-### Deploy
+### Como Fazer Deploy
 
 Para fazer deploy na Vercel:
 
@@ -1309,3 +261,17 @@ vercel --prod
 ```
 
 O deploy automático ocorre quando você faz push para a branch principal (se configurado no Vercel).
+
+## Contribuindo
+
+Para contribuir:
+
+1. Faça um fork do projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
+
+## Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.

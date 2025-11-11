@@ -1,12 +1,16 @@
 # Changelog
+
 Todas as mudanças relevantes nesse projeto serão documentadas nesse arquivo.
 
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 e este projeto adere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
 ### [Épico 7: Documentação]
+
 #### Added
+
 - **Task: (DOCS-01) Criar coleção Postman com todos os endpoints**
   - Coleção Postman completa criada (`CurriculoExpress.postman_collection.json`)
   - Inclui todos os endpoints da API organizados por entidades:
@@ -21,7 +25,7 @@ e este projeto adere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html
     - Certifications (POST /, GET /:id, PUT /:id, DELETE /:id)
     - Skills (GET /, GET /:id, POST /, PUT /:id, DELETE /:id)
   - Variáveis de ambiente configuradas:
-    - `{{BASE_URL}}`: URL base da API (padrão: http://localhost:3000)
+    - `{{BASE_URL}}`: URL base da API (padrão: <http://localhost:3000>)
     - `{{AUTH_TOKEN}}`: Token de autenticação Bearer (padrão: your-api-secret-key-here)
   - Todos os endpoints de escrita incluem header Authorization com Bearer Token
   - Exemplos de request body para todos os endpoints POST e PUT
@@ -30,6 +34,7 @@ e este projeto adere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html
   - Formato Postman Collection v2.1.0 compatível com Postman e outras ferramentas
 
 #### Documentation
+
 - **Task: Documentação da API via Postman Collection**
   - Coleção Postman serve como documentação interativa da API
   - Permite testar todos os endpoints diretamente no Postman
@@ -37,6 +42,7 @@ e este projeto adere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html
   - Inclui exemplos de payloads para facilitar o uso pelos desenvolvedores
 
 #### Fixed
+
 - **Correção do deploy no Vercel (404 NOT_FOUND)**
   - Criado arquivo `api/index.ts` para exportar o app Express sem iniciar servidor HTTP
   - Atualizado `vercel.json` para usar `api/index.ts` ao invés de `dist/server.js`
@@ -49,7 +55,9 @@ e este projeto adere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html
 ---
 
 ### [Épico 6: Deploy e Autenticação]
+
 #### Added
+
 - **Task: (DEPLOY-01) Criar script de seed.ts (João e Mariana)**
   - Script de seed completo implementado em `prisma/seed.ts`
   - Popula o banco de dados com dados de exemplo realistas
@@ -96,6 +104,7 @@ e este projeto adere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html
   - Variável de ambiente `API_SECRET_KEY` obrigatória para autenticação
 
 #### Testing
+
 - **Task: Testes de autenticação**
   - Helper de autenticação criado (`tests/helpers/auth.helper.ts`) para reutilização nos testes (DRY)
   - Testes unitários completos (`tests/unit/auth.middleware.test.ts`) cobrindo:
@@ -115,12 +124,14 @@ e este projeto adere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html
   - Helper function criada para reduzir duplicação nos testes unitários (DRY)
 
 #### Changed
+
 - **Task: Atualização de rotas para incluir autenticação**
   - Todas as rotas POST, PUT e DELETE agora requerem autenticação Bearer Token
   - Rotas GET permanecem públicas (sem autenticação)
   - Middleware `authenticate` aplicado consistentemente em todas as rotas de escrita
 
 #### Security
+
 - **Task: Implementação de segurança para endpoints de escrita**
   - Proteção de todos os endpoints de escrita com Bearer Token authentication
   - Validação rigorosa do formato do header Authorization
@@ -130,7 +141,9 @@ e este projeto adere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html
 ---
 
 ### [Épico 5: Endpoint Agregado]
+
 #### Added
+
 - **Task: (AGG-01) Endpoint GET /people/:id/full**
   - Endpoint agregado que retorna uma pessoa com todas as suas relações incluídas
   - Rota GET /api/v1/people/:id/full implementada e funcional
@@ -154,6 +167,7 @@ e este projeto adere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html
   - Validação completa da estrutura JSON de resposta incluindo todas as relações
 
 #### Performance
+
 - **Task: Otimização do endpoint /full**
   - Uso de eager-loading do Prisma (include) para buscar todas as relações em uma única consulta
   - Redução de múltiplas consultas ao banco para uma única consulta otimizada
@@ -162,7 +176,9 @@ e este projeto adere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html
 ---
 
 ### [Épico 4: Skills (N:M)]
+
 #### Added
+
 - **Task: (SKILL-01) Criar/ler Skills globais (CRUD)**
   - Interface ISkillsRepository definindo contratos de acesso aos dados
   - Implementação SkillsRepository com métodos CRUD completos
@@ -199,6 +215,7 @@ e este projeto adere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html
   - Testes unitários para PeopleService.disassociateSkill
 
 #### Changed
+
 - **Task: Integração das rotas do Épico 4 no app.ts**
   - Rotas de Skills registradas em /api/v1/skills
   - Rotas de associação/desassociação registradas em /api/v1/people (antes de /:id para evitar conflito)
@@ -210,6 +227,7 @@ e este projeto adere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html
   - Mantida consistência com padrão de outros serviços
 
 #### Performance
+
 - **Task: Otimizações de consultas no SkillsRepository**
   - Ordenação por nome (asc) no findAll para retornar skills ordenadas
   - Uso de findUnique para buscas por ID e nome (mais eficiente)
@@ -218,7 +236,9 @@ e este projeto adere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html
 ---
 
 ### [Épico 3: CRUD Seções (1:N)]
+
 #### Added
+
 - **Task: (EXP-01) Implementar CRUD completo para Experience**
   - Interface IExperienceRepository definindo contratos de acesso aos dados
   - Implementação ExperienceRepository com métodos CRUD completos
@@ -282,6 +302,7 @@ e este projeto adere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html
     - Testes de integração completos (tests/integration/certifications.api.test.ts) cobrindo todos os endpoints
 
 #### Changed
+
 - **Task: Integração das rotas do Épico 3 no app.ts**
   - Rotas de Experience registradas em /api/v1/experience
   - Rotas de Education registradas em /api/v1/education
@@ -293,6 +314,7 @@ e este projeto adere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html
   - Mantida consistência com a estrutura de rotas existente
 
 #### Performance
+
 - **Task: Otimizações de consultas nos repositórios do Épico 3**
   - Ordenação por data (start_date, issue_date) ou createdAt desc nos métodos findByPeopleId
   - Uso de findUnique para buscas por ID (mais eficiente que findFirst)
@@ -301,7 +323,9 @@ e este projeto adere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html
 ---
 
 ### [Épico 2: CRUD Core (People)]
+
 #### Added
+
 - **Task: (PEOPLE-01) Implementar PeopleRepository (CRUD)**
   - Interface IPeopleRepository definindo contratos de acesso aos dados
   - Implementação PeopleRepository com métodos CRUD completos
@@ -341,11 +365,13 @@ e este projeto adere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html
   - Verificação de persistência de dados no banco após operações
 
 #### Changed
+
 - **Task: Integração das rotas de People no app.ts**
   - Rotas de People registradas em /api/v1/people
   - Mantida consistência com a estrutura de rotas existente
 
 #### Performance
+
 - **Task: Otimizações de consultas no PeopleRepository**
   - Ordenação por createdAt desc no findAll para retornar registros mais recentes primeiro
   - Uso de findUnique para buscas por ID (mais eficiente que findFirst)
@@ -353,7 +379,9 @@ e este projeto adere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html
 ---
 
 ### [Épico 1: Fundação (Infra & DB)]
+
 #### Added
+
 - **Task: (INFRA-01) Configurar projeto (npm, TS, ESLint, Prettier, Husky)**
   - Configuração completa do projeto Node.js com TypeScript 5.x
   - Package.json com todas as dependências e scripts necessários
@@ -401,6 +429,7 @@ e este projeto adere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html
   - Scripts npm para execução de testes (test, test:unit, test:integration, test:watch, test:coverage)
 
 #### Changed
+
 - **Task: Otimizações e melhorias de código**
   - Refatoração do Error Handler usando padrão DRY com mapeamento de erros do Prisma
   - Simplificação do Validation Middleware removendo verificações redundantes
@@ -409,6 +438,7 @@ e este projeto adere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html
   - Otimização do código seguindo princípios SOLID e DRY
 
 #### Fixed
+
 - **Task: Correções de nomenclatura e qualidade de código**
   - Correção de nomes de variáveis para seguir convenções de mercado (camelCase)
   - Substituição de nomes genéricos (err, e) por nomes descritivos (error)
@@ -416,6 +446,7 @@ e este projeto adere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html
   - Correção da lógica de validação de variáveis de ambiente
 
 #### Performance
+
 - **Task: Otimizações de performance e eficiência**
   - Implementação de PrismaClient como singleton para evitar múltiplas conexões
   - Otimização do Error Handler com mapeamento de erros ao invés de múltiplos ifs
@@ -425,8 +456,11 @@ e este projeto adere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html
 ---
 
 ## [0.1.0] - YYYY-MM-DD
+
 ### [Epic: Implementação Inicial]
+
 #### Added
+
 - **Task: Configuração do Projeto**
   - Estrutura inicial do projeto
   - Configuração de dependências
