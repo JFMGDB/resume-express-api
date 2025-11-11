@@ -5,6 +5,39 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 e este projeto adere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### [Épico 7: Documentação]
+#### Added
+- **Task: (DOCS-01) Criar coleção Postman com todos os endpoints**
+  - Coleção Postman completa criada (`CurriculoExpress.postman_collection.json`)
+  - Inclui todos os endpoints da API organizados por entidades:
+    - Health Check (GET /api/v1/health, GET /)
+    - People (GET /, GET /:id, GET /:id/full, POST /, PUT /:id, DELETE /:id, POST /associate-skill, POST /disassociate-skill)
+    - Experience (POST /, GET /:id, PUT /:id, DELETE /:id)
+    - Education (POST /, GET /:id, PUT /:id, DELETE /:id)
+    - Projects (POST /, GET /:id, PUT /:id, DELETE /:id)
+    - Contacts (POST /, GET /:id, PUT /:id, DELETE /:id)
+    - Social Links (POST /, GET /:id, PUT /:id, DELETE /:id)
+    - Languages (POST /, GET /:id, PUT /:id, DELETE /:id)
+    - Certifications (POST /, GET /:id, PUT /:id, DELETE /:id)
+    - Skills (GET /, GET /:id, POST /, PUT /:id, DELETE /:id)
+  - Variáveis de ambiente configuradas:
+    - `{{BASE_URL}}`: URL base da API (padrão: http://localhost:3000)
+    - `{{AUTH_TOKEN}}`: Token de autenticação Bearer (padrão: your-api-secret-key-here)
+  - Todos os endpoints de escrita incluem header Authorization com Bearer Token
+  - Exemplos de request body para todos os endpoints POST e PUT
+  - Descrições detalhadas para cada endpoint
+  - Estrutura organizada em pastas por entidade para fácil navegação
+  - Formato Postman Collection v2.1.0 compatível com Postman e outras ferramentas
+
+#### Documentation
+- **Task: Documentação da API via Postman Collection**
+  - Coleção Postman serve como documentação interativa da API
+  - Permite testar todos os endpoints diretamente no Postman
+  - Facilita configuração em diferentes ambientes (local e produção) através de variáveis
+  - Inclui exemplos de payloads para facilitar o uso pelos desenvolvedores
+
+---
+
 ### [Épico 6: Deploy e Autenticação]
 #### Added
 - **Task: (DEPLOY-01) Criar script de seed.ts (João e Mariana)**

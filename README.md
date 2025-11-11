@@ -1236,6 +1236,47 @@ O arquivo `tests/setup.ts` configura o ambiente de testes globalmente, incluindo
 - Limpeza de mocks após cada teste
 - Configuração para uso de `jest-mock-extended` quando necessário
 
+## Coleção Postman
+
+O projeto inclui uma coleção Postman completa (`CurriculoExpress.postman_collection.json`) que documenta e permite testar todos os endpoints da API.
+
+### Como Usar
+
+1. **Importar a Coleção:**
+   - Abra o Postman
+   - Clique em "Import" e selecione o arquivo `CurriculoExpress.postman_collection.json`
+
+2. **Configurar Variáveis de Ambiente:**
+   - Na coleção, configure as variáveis:
+     - `BASE_URL`: URL base da API (ex: `http://localhost:3000` para local ou `https://sua-api.vercel.app` para produção)
+     - `AUTH_TOKEN`: Token de autenticação (valor da variável de ambiente `API_SECRET_KEY`)
+
+3. **Testar os Endpoints:**
+   - Navegue pelas pastas organizadas por entidade (People, Experience, Education, etc.)
+   - Todos os endpoints de escrita (POST, PUT, DELETE) já incluem o header `Authorization: Bearer {{AUTH_TOKEN}}`
+   - Os endpoints incluem exemplos de request body quando aplicável
+
+### Estrutura da Coleção
+
+A coleção está organizada em pastas por entidade:
+- **Health Check**: Endpoints de status da API
+- **People**: CRUD completo + endpoint agregado `/full` + associação/desassociação de skills
+- **Experience**: CRUD de experiências profissionais
+- **Education**: CRUD de formação acadêmica
+- **Projects**: CRUD de projetos
+- **Contacts**: CRUD de contatos
+- **Social Links**: CRUD de links sociais
+- **Languages**: CRUD de idiomas
+- **Certifications**: CRUD de certificações
+- **Skills**: CRUD de skills globais
+
+Cada endpoint inclui:
+- Método HTTP correto
+- URL com variáveis `{{BASE_URL}}`
+- Headers necessários (incluindo autenticação quando aplicável)
+- Exemplos de request body para POST e PUT
+- Descrições detalhadas
+
 ## Deploy
 
 O projeto está configurado para deploy na Vercel como função serverless. O arquivo `vercel.json` define a configuração de deploy e o script `vercel-build` garante que:

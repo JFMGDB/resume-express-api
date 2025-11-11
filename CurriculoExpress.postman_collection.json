@@ -1,0 +1,1226 @@
+{
+	"info": {
+		"_postman_id": "curriculo-express-api-v1",
+		"name": "Currículo Express API",
+		"description": "Coleção completa da API REST para gerenciamento de currículos profissionais",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "curriculo-express"
+	},
+	"item": [
+		{
+			"name": "Health Check",
+			"item": [
+				{
+					"name": "GET Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/health",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "health"]
+						},
+						"description": "Retorna o status da API"
+					},
+					"response": []
+				},
+				{
+					"name": "GET Root",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/",
+							"host": ["{{BASE_URL}}"],
+							"path": [""]
+						},
+						"description": "Retorna informações básicas da API"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "People",
+			"item": [
+				{
+					"name": "GET List All People",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/people",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "people"]
+						},
+						"description": "Lista todas as pessoas cadastradas"
+					},
+					"response": []
+				},
+				{
+					"name": "GET Person by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/people/:id",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "people", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "ID da pessoa (cuid)"
+								}
+							]
+						},
+						"description": "Busca uma pessoa específica pelo ID"
+					},
+					"response": []
+				},
+				{
+					"name": "GET Person Full Resume",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/people/:id/full",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "people", ":id", "full"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "ID da pessoa (cuid)"
+								}
+							]
+						},
+						"description": "Busca uma pessoa pelo ID com todas as suas relações incluídas (currículo completo)"
+					},
+					"response": []
+				},
+				{
+					"name": "POST Create Person",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"full_name\": \"João Silva\",\n  \"headline\": \"Desenvolvedor Full-Stack Sênior\",\n  \"summary\": \"Engenheiro de software com 8 anos de experiência na construção de aplicações web escaláveis.\",\n  \"location\": \"São Paulo, Brasil\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/people",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "people"]
+						},
+						"description": "Cria uma nova pessoa"
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Update Person",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"headline\": \"Desenvolvedor Full-Stack Sênior | Node.js & TypeScript\",\n  \"location\": \"Rio de Janeiro, Brasil\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/people/:id",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "people", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "ID da pessoa (cuid)"
+								}
+							]
+						},
+						"description": "Atualiza uma pessoa existente (todos os campos são opcionais)"
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Person",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/people/:id",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "people", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "ID da pessoa (cuid)"
+								}
+							]
+						},
+						"description": "Deleta uma pessoa e todos os seus dados relacionados (cascata)"
+					},
+					"response": []
+				},
+				{
+					"name": "POST Associate Skill",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"peopleId\": \"\",\n  \"skillId\": \"\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/people/associate-skill",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "people", "associate-skill"]
+						},
+						"description": "Associa uma skill a uma pessoa"
+					},
+					"response": []
+				},
+				{
+					"name": "POST Disassociate Skill",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"peopleId\": \"\",\n  \"skillId\": \"\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/people/disassociate-skill",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "people", "disassociate-skill"]
+						},
+						"description": "Desassocia uma skill de uma pessoa"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Experience",
+			"item": [
+				{
+					"name": "POST Create Experience",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"peopleId\": \"\",\n  \"company\": \"Tech Corp\",\n  \"position\": \"Desenvolvedor Full-Stack\",\n  \"start_date\": \"2020-01-01T00:00:00.000Z\",\n  \"end_date\": \"2022-12-31T23:59:59.999Z\",\n  \"description\": \"Desenvolvimento de aplicações web escaláveis usando React e Node.js\",\n  \"location\": \"São Paulo, Brasil\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/experience",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "experience"]
+						},
+						"description": "Cria uma nova experiência profissional"
+					},
+					"response": []
+				},
+				{
+					"name": "GET Experience by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/experience/:id",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "experience", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "ID da experiência (cuid)"
+								}
+							]
+						},
+						"description": "Busca uma experiência específica pelo ID"
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Update Experience",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"company\": \"New Tech Corp\",\n  \"position\": \"Desenvolvedor Full-Stack Sênior\",\n  \"description\": \"Nova descrição\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/experience/:id",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "experience", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "ID da experiência (cuid)"
+								}
+							]
+						},
+						"description": "Atualiza uma experiência existente (todos os campos são opcionais)"
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Experience",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/experience/:id",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "experience", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "ID da experiência (cuid)"
+								}
+							]
+						},
+						"description": "Deleta uma experiência"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Education",
+			"item": [
+				{
+					"name": "POST Create Education",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"peopleId\": \"\",\n  \"institution\": \"Universidade Federal\",\n  \"degree\": \"Bacharelado em Ciência da Computação\",\n  \"field_of_study\": \"Ciência da Computação\",\n  \"start_date\": \"2015-01-01T00:00:00.000Z\",\n  \"end_date\": \"2019-12-31T23:59:59.999Z\",\n  \"description\": \"Formação com foco em desenvolvimento de software\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/education",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "education"]
+						},
+						"description": "Cria uma nova formação acadêmica"
+					},
+					"response": []
+				},
+				{
+					"name": "GET Education by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/education/:id",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "education", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "ID da educação (cuid)"
+								}
+							]
+						},
+						"description": "Busca uma educação específica pelo ID"
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Update Education",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"institution\": \"Nova Universidade\",\n  \"degree\": \"Mestrado\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/education/:id",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "education", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "ID da educação (cuid)"
+								}
+							]
+						},
+						"description": "Atualiza uma educação existente (todos os campos são opcionais)"
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Education",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/education/:id",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "education", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "ID da educação (cuid)"
+								}
+							]
+						},
+						"description": "Deleta uma educação"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Projects",
+			"item": [
+				{
+					"name": "POST Create Project",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"peopleId\": \"\",\n  \"name\": \"Portfolio Website\",\n  \"description\": \"Site de portfólio pessoal desenvolvido com React e TypeScript\",\n  \"url\": \"https://joaosilva.dev\",\n  \"repository_url\": \"https://github.com/joaosilva/portfolio\",\n  \"start_date\": \"2023-01-01T00:00:00.000Z\",\n  \"end_date\": \"2023-06-30T23:59:59.999Z\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/projects",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "projects"]
+						},
+						"description": "Cria um novo projeto"
+					},
+					"response": []
+				},
+				{
+					"name": "GET Project by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/projects/:id",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "projects", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "ID do projeto (cuid)"
+								}
+							]
+						},
+						"description": "Busca um projeto específico pelo ID"
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Update Project",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Novo Nome do Projeto\",\n  \"description\": \"Nova descrição\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/projects/:id",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "projects", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "ID do projeto (cuid)"
+								}
+							]
+						},
+						"description": "Atualiza um projeto existente (todos os campos são opcionais)"
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Project",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/projects/:id",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "projects", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "ID do projeto (cuid)"
+								}
+							]
+						},
+						"description": "Deleta um projeto"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Contacts",
+			"item": [
+				{
+					"name": "POST Create Contact",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"peopleId\": \"\",\n  \"type\": \"email\",\n  \"value\": \"joao.silva@email.com\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/contacts",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "contacts"]
+						},
+						"description": "Cria um novo contato"
+					},
+					"response": []
+				},
+				{
+					"name": "GET Contact by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/contacts/:id",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "contacts", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "ID do contato (cuid)"
+								}
+							]
+						},
+						"description": "Busca um contato específico pelo ID"
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Update Contact",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"type\": \"phone\",\n  \"value\": \"+55 11 98765-4321\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/contacts/:id",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "contacts", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "ID do contato (cuid)"
+								}
+							]
+						},
+						"description": "Atualiza um contato existente (todos os campos são opcionais)"
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Contact",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/contacts/:id",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "contacts", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "ID do contato (cuid)"
+								}
+							]
+						},
+						"description": "Deleta um contato"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Social Links",
+			"item": [
+				{
+					"name": "POST Create Social Link",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"peopleId\": \"\",\n  \"platform\": \"linkedin\",\n  \"url\": \"https://linkedin.com/in/joaosilva\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/social-links",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "social-links"]
+						},
+						"description": "Cria um novo link social"
+					},
+					"response": []
+				},
+				{
+					"name": "GET Social Link by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/social-links/:id",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "social-links", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "ID do link social (cuid)"
+								}
+							]
+						},
+						"description": "Busca um link social específico pelo ID"
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Update Social Link",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"platform\": \"github\",\n  \"url\": \"https://github.com/joaosilva\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/social-links/:id",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "social-links", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "ID do link social (cuid)"
+								}
+							]
+						},
+						"description": "Atualiza um link social existente (todos os campos são opcionais)"
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Social Link",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/social-links/:id",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "social-links", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "ID do link social (cuid)"
+								}
+							]
+						},
+						"description": "Deleta um link social"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Languages",
+			"item": [
+				{
+					"name": "POST Create Language",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"peopleId\": \"\",\n  \"name\": \"Inglês\",\n  \"proficiency\": \"Fluente (C1)\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/languages",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "languages"]
+						},
+						"description": "Cria um novo idioma"
+					},
+					"response": []
+				},
+				{
+					"name": "GET Language by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/languages/:id",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "languages", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "ID do idioma (cuid)"
+								}
+							]
+						},
+						"description": "Busca um idioma específico pelo ID"
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Update Language",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Espanhol\",\n  \"proficiency\": \"Intermediário (B2)\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/languages/:id",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "languages", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "ID do idioma (cuid)"
+								}
+							]
+						},
+						"description": "Atualiza um idioma existente (todos os campos são opcionais)"
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Language",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/languages/:id",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "languages", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "ID do idioma (cuid)"
+								}
+							]
+						},
+						"description": "Deleta um idioma"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Certifications",
+			"item": [
+				{
+					"name": "POST Create Certification",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"peopleId\": \"\",\n  \"name\": \"AWS Certified Solutions Architect\",\n  \"issuer\": \"AWS\",\n  \"issue_date\": \"2023-01-15T00:00:00.000Z\",\n  \"url\": \"https://aws.amazon.com/certification/\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/certifications",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "certifications"]
+						},
+						"description": "Cria uma nova certificação"
+					},
+					"response": []
+				},
+				{
+					"name": "GET Certification by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/certifications/:id",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "certifications", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "ID da certificação (cuid)"
+								}
+							]
+						},
+						"description": "Busca uma certificação específica pelo ID"
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Update Certification",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"AWS Certified Developer\",\n  \"issuer\": \"Amazon Web Services\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/certifications/:id",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "certifications", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "ID da certificação (cuid)"
+								}
+							]
+						},
+						"description": "Atualiza uma certificação existente (todos os campos são opcionais)"
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Certification",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/certifications/:id",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "certifications", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "ID da certificação (cuid)"
+								}
+							]
+						},
+						"description": "Deleta uma certificação"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Skills",
+			"item": [
+				{
+					"name": "GET List All Skills",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/skills",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "skills"]
+						},
+						"description": "Lista todas as skills cadastradas (ordenadas por nome)"
+					},
+					"response": []
+				},
+				{
+					"name": "GET Skill by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/skills/:id",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "skills", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "ID da skill (cuid)"
+								}
+							]
+						},
+						"description": "Busca uma skill específica pelo ID"
+					},
+					"response": []
+				},
+				{
+					"name": "POST Create Skill",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"TypeScript\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/skills",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "skills"]
+						},
+						"description": "Cria uma nova skill (global). O nome deve ser único."
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Update Skill",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"JavaScript\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/skills/:id",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "skills", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "ID da skill (cuid)"
+								}
+							]
+						},
+						"description": "Atualiza uma skill existente. O nome deve ser único."
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Skill",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/skills/:id",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "v1", "skills", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "ID da skill (cuid)"
+								}
+							]
+						},
+						"description": "Deleta uma skill"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "BASE_URL",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "AUTH_TOKEN",
+			"value": "your-api-secret-key-here",
+			"type": "string"
+		}
+	]
+}
+
