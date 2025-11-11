@@ -36,6 +36,16 @@ e este projeto adere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html
   - Facilita configuração em diferentes ambientes (local e produção) através de variáveis
   - Inclui exemplos de payloads para facilitar o uso pelos desenvolvedores
 
+#### Fixed
+- **Correção do deploy no Vercel (404 NOT_FOUND)**
+  - Criado arquivo `api/index.ts` para exportar o app Express sem iniciar servidor HTTP
+  - Atualizado `vercel.json` para usar `api/index.ts` ao invés de `dist/server.js`
+  - Configuração corrigida para funcionar no ambiente serverless da Vercel
+  - Atualizado `tsconfig.json` para incluir a pasta `api` na compilação
+  - **O QUE:** O erro 404 ocorria porque o `vercel.json` apontava para `dist/server.js` que tenta fazer `app.listen()`, incompatível com serverless
+  - **POR QUÊ:** Na Vercel, precisamos exportar o app Express diretamente, sem iniciar um servidor HTTP (a Vercel gerencia isso automaticamente)
+  - **ONDE:** Arquivos `api/index.ts`, `vercel.json` e `tsconfig.json`
+
 ---
 
 ### [Épico 6: Deploy e Autenticação]
