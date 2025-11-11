@@ -5,6 +5,62 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 e este projeto adere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### [Épico 4: Skills (N:M)]
+#### Added
+- **Task: (SKILL-01) Criar/ler Skills globais (CRUD)**
+  - Interface ISkillsRepository definindo contratos de acesso aos dados
+  - Implementação SkillsRepository com métodos CRUD completos
+  - Métodos: create, findById, findByName, findAll, update, delete
+  - Classe SkillsService contendo a lógica de negócios
+  - Validação de unicidade do nome da skill (ConflictError para duplicatas)
+  - Método privado validateSkillNameUnique para seguir DRY
+  - DTOs Zod para validação: createSkillSchema, updateSkillSchema, skillParamsSchema
+  - SkillsController com métodos: create, getById, getAll, update, delete
+  - Rotas RESTful completas: GET /api/v1/skills, GET /api/v1/skills/:id, POST /api/v1/skills, PUT /api/v1/skills/:id, DELETE /api/v1/skills/:id
+  - Testes de integração completos (tests/integration/skills.api.test.ts) cobrindo todos os endpoints
+  - Testes unitários completos (tests/unit/skills.service.test.ts) cobrindo 100% do serviço
+  - Ordenação por nome (asc) no método findAll
+
+- **Task: (SKILL-02) Associar uma Skill a uma Pessoa**
+  - Método associateSkill no IPeopleRepository e PeopleRepository
+  - Implementação usando Prisma connect para relação N:M
+  - Validação de existência da pessoa e skill antes de associar
+  - Método validateSkillExists no PeopleService para seguir DRY
+  - DTO Zod: associateSkillSchema para validação de entrada
+  - Método associateSkill no PeopleController
+  - Rota POST /api/v1/people/associate-skill
+  - Testes de integração completos cobrindo casos de sucesso e erro
+  - Testes unitários para PeopleService.associateSkill
+
+- **Task: (SKILL-03) Desassociar uma Skill de uma Pessoa**
+  - Método disassociateSkill no IPeopleRepository e PeopleRepository
+  - Implementação usando Prisma disconnect para relação N:M
+  - Validação de existência da pessoa e skill antes de desassociar
+  - DTO Zod: disassociateSkillSchema para validação de entrada
+  - Método disassociateSkill no PeopleController
+  - Rota POST /api/v1/people/disassociate-skill
+  - Testes de integração completos cobrindo casos de sucesso e erro
+  - Testes unitários para PeopleService.disassociateSkill
+
+#### Changed
+- **Task: Integração das rotas do Épico 4 no app.ts**
+  - Rotas de Skills registradas em /api/v1/skills
+  - Rotas de associação/desassociação registradas em /api/v1/people (antes de /:id para evitar conflito)
+  - Mantida consistência com a estrutura de rotas existente
+
+- **Task: Refatoração do PeopleService para suportar Skills**
+  - Adicionada injeção de dependência de ISkillsRepository no construtor
+  - Método privado validateSkillExists para reutilização (DRY)
+  - Mantida consistência com padrão de outros serviços
+
+#### Performance
+- **Task: Otimizações de consultas no SkillsRepository**
+  - Ordenação por nome (asc) no findAll para retornar skills ordenadas
+  - Uso de findUnique para buscas por ID e nome (mais eficiente)
+  - Validação de unicidade do nome antes de criar/atualizar para evitar operações desnecessárias
+
+---
+
 ### [Épico 3: CRUD Seções (1:N)]
 #### Added
 - **Task: (EXP-01) Implementar CRUD completo para Experience**

@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 import { PeopleService } from '../services/people.service';
 import { CreatePersonDto } from '../dtos/create-person.dto';
 import { UpdatePersonDto } from '../dtos/update-person.dto';
+import { AssociateSkillDto } from '../dtos/associate-skill.dto';
+import { DisassociateSkillDto } from '../dtos/disassociate-skill.dto';
 
 /**
  * Controller de People
@@ -79,6 +81,40 @@ export class PeopleController {
       await this.peopleService.deletePerson(id);
 
       res.status(204).send();
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  /**
+   * Associa uma skill a uma pessoa
+   */
+  associateSkill = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const associateData = req.body as AssociateSkillDto;
+      const updatedPerson = await this.peopleService.associateSkill(
+        associateData.peopleId,
+        associateData.skillId
+      );
+
+      res.status(200).json(updatedPerson);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  /**
+   * Desassocia uma skill de uma pessoa
+   */
+  disassociateSkill = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const disassociateData = req.body as DisassociateSkillDto;
+      const updatedPerson = await this.peopleService.disassociateSkill(
+        disassociateData.peopleId,
+        disassociateData.skillId
+      );
+
+      res.status(200).json(updatedPerson);
     } catch (error) {
       next(error);
     }

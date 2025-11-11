@@ -1,6 +1,8 @@
 import { People, Prisma } from '@prisma/client';
 import { IPeopleRepository } from '../interfaces/IPeopleRepository';
 import { PeopleRepository } from '../repositories/people.repository';
+import { ISkillsRepository } from '../interfaces/ISkillsRepository';
+import { SkillsRepository } from '../repositories/skills.repository';
 import { CreatePersonDto } from '../dtos/create-person.dto';
 import { UpdatePersonDto } from '../dtos/update-person.dto';
 
@@ -25,10 +27,12 @@ export class NotFoundError extends Error {
  */
 export class PeopleService {
   private peopleRepository: IPeopleRepository;
+  private skillsRepository: ISkillsRepository;
 
-  constructor(peopleRepository?: IPeopleRepository) {
+  constructor(peopleRepository?: IPeopleRepository, skillsRepository?: ISkillsRepository) {
     // Permite injeção de dependência para facilitar testes
     this.peopleRepository = peopleRepository || new PeopleRepository();
+    this.skillsRepository = skillsRepository || new SkillsRepository();
   }
 
   /**
@@ -106,6 +110,50 @@ export class PeopleService {
     await this.peopleRepository.delete(id);
 
     return person;
+  }
+
+  /**
+   * Valida se a skill existe no banco de dados
+   * @param skillId ID da skill a ser validada
+   * @throws NotFoundError se a skill não for encontrada
+   */
+  private async validateSkillExists(skillId: string): Promise<void> {
+    const skill = await this.skillsRepository.findById(skillId);
+    if (!skill) {
+      throw new NotFoundError('Skill not found');
+    }
+  }
+
+  /**
+   * Associa uma skill a uma pessoa
+   * @param peopleId ID da pessoa
+   * @param skillId ID da skill
+   * @returns Promise com a pessoa atualizada
+   * @throws NotFoundError se a pessoa ou skill não for encontrada
+   */
+  async associateSkill(peopleId: string, skillId: string): Promise<People> {
+    // Verifica se a pessoa existe
+    await this.getPersonById(peopleId);
+    // Verifica se a skill existe
+    await this.validateSkillExists(skillId);
+
+    return this.peopleRepository.associateSkill(peopleId, skillId);
+  }
+
+  /**
+   * Desassocia uma skill de uma pessoa
+   * @param peopleId ID da pessoa
+   * @param skillId ID da skill
+   * @returns Promise com a pessoa atualizada
+   * @throws NotFoundError se a pessoa ou skill não for encontrada
+   */
+  async disassociateSkill(peopleId: string, skillId: string): Promise<People> {
+    // Verifica se a pessoa existe
+    await this.getPersonById(peopleId);
+    // Verifica se a skill existe
+    await this.validateSkillExists(skillId);
+
+    return this.peopleRepository.disassociateSkill(peopleId, skillId);
   }
 }
 

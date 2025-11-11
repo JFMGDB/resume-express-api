@@ -39,5 +39,21 @@ export interface IPeopleRepository {
    * @returns Promise com a pessoa deletada
    */
   delete(id: string): Promise<People>;
+
+  /**
+   * Associa uma skill a uma pessoa
+   * @param peopleId ID da pessoa
+   * @param skillId ID da skill
+   * @returns Promise com a pessoa atualizada
+   */
+  associateSkill(peopleId: string, skillId: string): Promise<People>;
+
+  /**
+   * Desassocia uma skill de uma pessoa
+   * @param peopleId ID da pessoa
+   * @param skillId ID da skill
+   * @returns Promise com a pessoa atualizada
+   */
+  disassociateSkill(peopleId: string, skillId: string): Promise<People>;
 }
 

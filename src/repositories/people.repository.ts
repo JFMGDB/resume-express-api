@@ -54,5 +54,33 @@ export class PeopleRepository implements IPeopleRepository {
       where: { id },
     });
   }
+
+  /**
+   * Associa uma skill a uma pessoa
+   */
+  async associateSkill(peopleId: string, skillId: string): Promise<People> {
+    return prisma.people.update({
+      where: { id: peopleId },
+      data: {
+        skills: {
+          connect: { id: skillId },
+        },
+      },
+    });
+  }
+
+  /**
+   * Desassocia uma skill de uma pessoa
+   */
+  async disassociateSkill(peopleId: string, skillId: string): Promise<People> {
+    return prisma.people.update({
+      where: { id: peopleId },
+      data: {
+        skills: {
+          disconnect: { id: skillId },
+        },
+      },
+    });
+  }
 }
 

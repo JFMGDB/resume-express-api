@@ -722,6 +722,161 @@ O projeto implementa os seguintes middlewares globais:
 
 **Resposta de Sucesso (204):** Sem conteúdo
 
+#### Associar Skill a Pessoa
+
+- `POST /api/v1/people/associate-skill`: Associa uma skill a uma pessoa
+
+**Body (JSON):**
+```json
+{
+  "peopleId": "clxmg9v4o000008l4f3h3g3q3",
+  "skillId": "clxmg9v4o000008l4f3h3g4q4"
+}
+```
+
+**Campos:**
+- `peopleId` (string, obrigatório): ID da pessoa (cuid)
+- `skillId` (string, obrigatório): ID da skill (cuid)
+
+**Resposta de Sucesso (200):** Retorna o objeto People atualizado com a skill associada
+
+**Resposta de Erro (404):** Se `peopleId` ou `skillId` não existirem
+
+#### Desassociar Skill de Pessoa
+
+- `POST /api/v1/people/disassociate-skill`: Desassocia uma skill de uma pessoa
+
+**Body (JSON):**
+```json
+{
+  "peopleId": "clxmg9v4o000008l4f3h3g3q3",
+  "skillId": "clxmg9v4o000008l4f3h3g4q4"
+}
+```
+
+**Campos:**
+- `peopleId` (string, obrigatório): ID da pessoa (cuid)
+- `skillId` (string, obrigatório): ID da skill (cuid)
+
+**Resposta de Sucesso (200):** Retorna o objeto People atualizado sem a skill desassociada
+
+**Resposta de Erro (404):** Se `peopleId` ou `skillId` não existirem
+
+### Skills (Habilidades)
+
+#### Listar Todas as Skills
+
+- `GET /api/v1/skills`: Lista todas as skills cadastradas (ordenadas por nome)
+
+**Resposta de Sucesso (200):**
+```json
+[
+  {
+    "id": "clxmg9v4o000008l4f3h3g4q4",
+    "name": "TypeScript",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "clxmg9v4o000008l4f3h3g5q5",
+    "name": "React",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  }
+]
+```
+
+#### Buscar Skill por ID
+
+- `GET /api/v1/skills/:id`: Busca uma skill específica pelo ID
+
+**Parâmetros:**
+- `id` (string, obrigatório): ID da skill (cuid)
+
+**Resposta de Sucesso (200):**
+```json
+{
+  "id": "clxmg9v4o000008l4f3h3g4q4",
+  "name": "TypeScript",
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z"
+}
+```
+
+**Resposta de Erro (404):**
+```json
+{
+  "status": "error",
+  "message": "Skill not found"
+}
+```
+
+#### Criar Nova Skill
+
+- `POST /api/v1/skills`: Cria uma nova skill
+
+**Body (JSON):**
+```json
+{
+  "name": "TypeScript"
+}
+```
+
+**Campos:**
+- `name` (string, obrigatório): Nome da skill (mínimo 2 caracteres, máximo 255, único)
+
+**Resposta de Sucesso (201):**
+```json
+{
+  "id": "clxmg9v4o000008l4f3h3g4q4",
+  "name": "TypeScript",
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z"
+}
+```
+
+**Resposta de Erro (409) - Nome já existe:**
+```json
+{
+  "status": "error",
+  "message": "Skill with this name already exists"
+}
+```
+
+#### Atualizar Skill
+
+- `PUT /api/v1/skills/:id`: Atualiza uma skill existente
+
+**Parâmetros:**
+- `id` (string, obrigatório): ID da skill (cuid)
+
+**Body (JSON) - Campo opcional:**
+```json
+{
+  "name": "JavaScript"
+}
+```
+
+**Campos:**
+- `name` (string, opcional): Nome da skill (mínimo 2 caracteres, máximo 255, único)
+
+**Resposta de Sucesso (200):** Retorna o objeto Skill atualizado
+
+**Resposta de Erro (404):** Se a skill não existir
+
+**Resposta de Erro (409):** Se o novo nome já existir
+
+#### Deletar Skill
+
+- `DELETE /api/v1/skills/:id`: Deleta uma skill
+
+**Parâmetros:**
+- `id` (string, obrigatório): ID da skill (cuid)
+
+**Resposta de Sucesso (204):** Sem conteúdo
+
+**Resposta de Erro (404):** Se a skill não existir
+
 **Nota:** Todos os endpoints de entidades 1:N (Experience, Education, Projects, Contacts, SocialLinks, Languages, Certifications) seguem o mesmo padrão:
 - Requerem `peopleId` no body do POST para associar à pessoa
 - Retornam 404 se `peopleId` não existir
@@ -744,7 +899,7 @@ A API retorna erros padronizados no seguinte formato:
 
 - `400`: Bad Request - Erro de validação (Zod) ou constraint do banco
 - `404`: Not Found - Registro não encontrado
-- `409`: Conflict - Violação de constraint única
+- `409`: Conflict - Violação de constraint única (ex: nome de skill duplicado)
 - `500`: Internal Server Error - Erro genérico do servidor ou banco de dados
 
 ### Erros do Prisma Tratados
@@ -769,6 +924,7 @@ npm run test:unit
 **Exemplos:**
 - `tests/unit/health.controller.test.ts` - Testes do Health Controller
 - `tests/unit/people.service.test.ts` - Testes do People Service (100% de cobertura)
+- `tests/unit/skills.service.test.ts` - Testes do Skills Service (100% de cobertura)
 
 ### Testes de Integração
 
@@ -790,6 +946,8 @@ npm run test:integration
 - `tests/integration/social-links.api.test.ts` - Testes completos da SocialLinks API
 - `tests/integration/languages.api.test.ts` - Testes completos da Languages API
 - `tests/integration/certifications.api.test.ts` - Testes completos da Certifications API
+- `tests/integration/skills.api.test.ts` - Testes completos da Skills API
+- `tests/integration/people-associate-skill.api.test.ts` - Testes de associação/desassociação de skills
 
 **Nota:** Os testes de integração requerem um banco de dados de teste configurado em `DATABASE_URL_TEST`.
 

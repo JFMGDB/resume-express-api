@@ -1,18 +1,21 @@
 import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
-import { People } from '@prisma/client';
+import { People, Skills } from '@prisma/client';
 import { IPeopleRepository } from '../../src/interfaces/IPeopleRepository';
+import { ISkillsRepository } from '../../src/interfaces/ISkillsRepository';
 import { PeopleService, NotFoundError } from '../../src/services/people.service';
 
 describe('PeopleService (Unit)', () => {
   let peopleService: PeopleService;
   let mockPeopleRepo: DeepMockProxy<IPeopleRepository>;
+  let mockSkillsRepo: DeepMockProxy<ISkillsRepository>;
 
   beforeEach(() => {
-    // Configura o mock profundo para a interface do repositório
+    // Configura o mock profundo para as interfaces dos repositórios
     mockPeopleRepo = mockDeep<IPeopleRepository>();
+    mockSkillsRepo = mockDeep<ISkillsRepository>();
 
-    // Injeta o repositório mockado no serviço
-    peopleService = new PeopleService(mockPeopleRepo);
+    // Injeta os repositórios mockados no serviço
+    peopleService = new PeopleService(mockPeopleRepo, mockSkillsRepo);
   });
 
   describe('createPerson', () => {
@@ -324,6 +327,168 @@ describe('PeopleService (Unit)', () => {
 
       expect(mockPeopleRepo.findById).toHaveBeenCalledWith(nonExistingId);
       expect(mockPeopleRepo.delete).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('associateSkill', () => {
+    it('should associate a skill to a person when both exist', async () => {
+      const peopleId = 'cuid_123';
+      const skillId = 'cuid_456';
+
+      const existingPerson: People = {
+        id: peopleId,
+        full_name: 'João Silva',
+        headline: 'Desenvolvedor Full-Stack',
+        summary: 'Engenheiro de software com experiência em desenvolvimento web.',
+        location: 'São Paulo, Brasil',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      const existingSkill: Skills = {
+        id: skillId,
+        name: 'TypeScript',
+      };
+
+      const updatedPerson: People = {
+        ...existingPerson,
+        updatedAt: new Date(),
+      };
+
+      // Mock para getPersonById (chamado internamente)
+      mockPeopleRepo.findById.mockResolvedValue(existingPerson);
+      // Mock para validateSkillExists (chamado internamente)
+      mockSkillsRepo.findById.mockResolvedValue(existingSkill);
+      // Mock para associateSkill
+      mockPeopleRepo.associateSkill.mockResolvedValue(updatedPerson);
+
+      const result = await peopleService.associateSkill(peopleId, skillId);
+
+      expect(result).toEqual(updatedPerson);
+      expect(mockPeopleRepo.findById).toHaveBeenCalledWith(peopleId);
+      expect(mockSkillsRepo.findById).toHaveBeenCalledWith(skillId);
+      expect(mockPeopleRepo.associateSkill).toHaveBeenCalledWith(peopleId, skillId);
+      expect(mockPeopleRepo.associateSkill).toHaveBeenCalledTimes(1);
+    });
+
+    it('should throw NotFoundError if person does not exist', async () => {
+      const peopleId = 'non_existing_person';
+      const skillId = 'cuid_456';
+
+      mockPeopleRepo.findById.mockResolvedValue(null);
+
+      await expect(peopleService.associateSkill(peopleId, skillId)).rejects.toThrow(NotFoundError);
+      await expect(peopleService.associateSkill(peopleId, skillId)).rejects.toThrow('Person not found');
+
+      expect(mockPeopleRepo.findById).toHaveBeenCalledWith(peopleId);
+      expect(mockSkillsRepo.findById).not.toHaveBeenCalled();
+      expect(mockPeopleRepo.associateSkill).not.toHaveBeenCalled();
+    });
+
+    it('should throw NotFoundError if skill does not exist', async () => {
+      const peopleId = 'cuid_123';
+      const skillId = 'non_existing_skill';
+
+      const existingPerson: People = {
+        id: peopleId,
+        full_name: 'João Silva',
+        headline: 'Desenvolvedor Full-Stack',
+        summary: 'Engenheiro de software com experiência em desenvolvimento web.',
+        location: 'São Paulo, Brasil',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      mockPeopleRepo.findById.mockResolvedValue(existingPerson);
+      mockSkillsRepo.findById.mockResolvedValue(null);
+
+      await expect(peopleService.associateSkill(peopleId, skillId)).rejects.toThrow(NotFoundError);
+      await expect(peopleService.associateSkill(peopleId, skillId)).rejects.toThrow('Skill not found');
+
+      expect(mockPeopleRepo.findById).toHaveBeenCalledWith(peopleId);
+      expect(mockSkillsRepo.findById).toHaveBeenCalledWith(skillId);
+      expect(mockPeopleRepo.associateSkill).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('disassociateSkill', () => {
+    it('should disassociate a skill from a person when both exist', async () => {
+      const peopleId = 'cuid_123';
+      const skillId = 'cuid_456';
+
+      const existingPerson: People = {
+        id: peopleId,
+        full_name: 'João Silva',
+        headline: 'Desenvolvedor Full-Stack',
+        summary: 'Engenheiro de software com experiência em desenvolvimento web.',
+        location: 'São Paulo, Brasil',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      const existingSkill: Skills = {
+        id: skillId,
+        name: 'TypeScript',
+      };
+
+      const updatedPerson: People = {
+        ...existingPerson,
+        updatedAt: new Date(),
+      };
+
+      // Mock para getPersonById (chamado internamente)
+      mockPeopleRepo.findById.mockResolvedValue(existingPerson);
+      // Mock para validateSkillExists (chamado internamente)
+      mockSkillsRepo.findById.mockResolvedValue(existingSkill);
+      // Mock para disassociateSkill
+      mockPeopleRepo.disassociateSkill.mockResolvedValue(updatedPerson);
+
+      const result = await peopleService.disassociateSkill(peopleId, skillId);
+
+      expect(result).toEqual(updatedPerson);
+      expect(mockPeopleRepo.findById).toHaveBeenCalledWith(peopleId);
+      expect(mockSkillsRepo.findById).toHaveBeenCalledWith(skillId);
+      expect(mockPeopleRepo.disassociateSkill).toHaveBeenCalledWith(peopleId, skillId);
+      expect(mockPeopleRepo.disassociateSkill).toHaveBeenCalledTimes(1);
+    });
+
+    it('should throw NotFoundError if person does not exist', async () => {
+      const peopleId = 'non_existing_person';
+      const skillId = 'cuid_456';
+
+      mockPeopleRepo.findById.mockResolvedValue(null);
+
+      await expect(peopleService.disassociateSkill(peopleId, skillId)).rejects.toThrow(NotFoundError);
+      await expect(peopleService.disassociateSkill(peopleId, skillId)).rejects.toThrow('Person not found');
+
+      expect(mockPeopleRepo.findById).toHaveBeenCalledWith(peopleId);
+      expect(mockSkillsRepo.findById).not.toHaveBeenCalled();
+      expect(mockPeopleRepo.disassociateSkill).not.toHaveBeenCalled();
+    });
+
+    it('should throw NotFoundError if skill does not exist', async () => {
+      const peopleId = 'cuid_123';
+      const skillId = 'non_existing_skill';
+
+      const existingPerson: People = {
+        id: peopleId,
+        full_name: 'João Silva',
+        headline: 'Desenvolvedor Full-Stack',
+        summary: 'Engenheiro de software com experiência em desenvolvimento web.',
+        location: 'São Paulo, Brasil',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      mockPeopleRepo.findById.mockResolvedValue(existingPerson);
+      mockSkillsRepo.findById.mockResolvedValue(null);
+
+      await expect(peopleService.disassociateSkill(peopleId, skillId)).rejects.toThrow(NotFoundError);
+      await expect(peopleService.disassociateSkill(peopleId, skillId)).rejects.toThrow('Skill not found');
+
+      expect(mockPeopleRepo.findById).toHaveBeenCalledWith(peopleId);
+      expect(mockSkillsRepo.findById).toHaveBeenCalledWith(skillId);
+      expect(mockPeopleRepo.disassociateSkill).not.toHaveBeenCalled();
     });
   });
 });

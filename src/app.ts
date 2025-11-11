@@ -10,6 +10,7 @@ import contactsRoutes from './routes/contacts.routes';
 import socialLinksRoutes from './routes/social-links.routes';
 import languagesRoutes from './routes/languages.routes';
 import certificationsRoutes from './routes/certifications.routes';
+import skillsRoutes from './routes/skills.routes';
 
 const app: Application = express();
 
@@ -28,6 +29,7 @@ app.use('/api/v1/contacts', contactsRoutes);
 app.use('/api/v1/social-links', socialLinksRoutes);
 app.use('/api/v1/languages', languagesRoutes);
 app.use('/api/v1/certifications', certificationsRoutes);
+app.use('/api/v1/skills', skillsRoutes);
 
 // Rota raiz
 app.get('/', (_req: Request, res: Response) => {
