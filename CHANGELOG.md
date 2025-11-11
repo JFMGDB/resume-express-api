@@ -5,6 +5,89 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 e este projeto adere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### [Épico 3: CRUD Seções (1:N)]
+#### Added
+- **Task: (EXP-01) Implementar CRUD completo para Experience**
+  - Interface IExperienceRepository definindo contratos de acesso aos dados
+  - Implementação ExperienceRepository com métodos CRUD completos
+  - Métodos: create, findById, findByPeopleId, update, delete
+  - Classe ExperienceService contendo a lógica de negócios
+  - Validação de existência da pessoa antes de criar experiência
+  - DTOs Zod para validação: createExperienceSchema, updateExperienceSchema, experienceParamsSchema
+  - ExperienceController com métodos: create, getById, update, delete
+  - Rotas RESTful completas: GET /api/v1/experience/:id, POST /api/v1/experience, PUT /api/v1/experience/:id, DELETE /api/v1/experience/:id
+  - Testes de integração completos (tests/integration/experience.api.test.ts) cobrindo todos os endpoints
+
+- **Task: (EDU-01) Implementar CRUD completo para Education**
+  - Interface IEducationRepository definindo contratos de acesso aos dados
+  - Implementação EducationRepository com métodos CRUD completos
+  - Métodos: create, findById, findByPeopleId, update, delete
+  - Classe EducationService contendo a lógica de negócios
+  - Validação de existência da pessoa antes de criar educação
+  - DTOs Zod para validação: createEducationSchema, updateEducationSchema, educationParamsSchema
+  - EducationController com métodos: create, getById, update, delete
+  - Rotas RESTful completas: GET /api/v1/education/:id, POST /api/v1/education, PUT /api/v1/education/:id, DELETE /api/v1/education/:id
+  - Testes de integração completos (tests/integration/education.api.test.ts) cobrindo todos os endpoints
+
+- **Task: (PROJ-01) Implementar CRUD completo para Projects**
+  - Interface IProjectsRepository definindo contratos de acesso aos dados
+  - Implementação ProjectsRepository com métodos CRUD completos
+  - Métodos: create, findById, findByPeopleId, update, delete
+  - Classe ProjectsService contendo a lógica de negócios
+  - Validação de existência da pessoa antes de criar projeto
+  - DTOs Zod para validação: createProjectsSchema, updateProjectsSchema, projectsParamsSchema
+  - Validação de URLs para campos url e repository_url
+  - ProjectsController com métodos: create, getById, update, delete
+  - Rotas RESTful completas: GET /api/v1/projects/:id, POST /api/v1/projects, PUT /api/v1/projects/:id, DELETE /api/v1/projects/:id
+  - Testes de integração completos (tests/integration/projects.api.test.ts) cobrindo todos os endpoints
+
+- **Task: (SUB-01) Implementar CRUD completo para Contacts, SocialLinks, Languages e Certifications**
+  - **Contacts:**
+    - Interface IContactsRepository e implementação ContactsRepository
+    - Classe ContactsService com validação de existência da pessoa
+    - DTOs Zod: createContactsSchema, updateContactsSchema, contactsParamsSchema
+    - ContactsController e rotas RESTful completas
+    - Testes de integração completos (tests/integration/contacts.api.test.ts) cobrindo todos os endpoints
+  - **SocialLinks:**
+    - Interface ISocialLinksRepository e implementação SocialLinksRepository
+    - Classe SocialLinksService com validação de existência da pessoa
+    - DTOs Zod: createSocialLinksSchema, updateSocialLinksSchema, socialLinksParamsSchema
+    - Validação de URL para campo url
+    - SocialLinksController e rotas RESTful completas
+    - Testes de integração completos (tests/integration/social-links.api.test.ts) cobrindo todos os endpoints
+  - **Languages:**
+    - Interface ILanguagesRepository e implementação LanguagesRepository
+    - Classe LanguagesService com validação de existência da pessoa
+    - DTOs Zod: createLanguagesSchema, updateLanguagesSchema, languagesParamsSchema
+    - LanguagesController e rotas RESTful completas
+    - Testes de integração completos (tests/integration/languages.api.test.ts) cobrindo todos os endpoints
+  - **Certifications:**
+    - Interface ICertificationsRepository e implementação CertificationsRepository
+    - Classe CertificationsService com validação de existência da pessoa
+    - DTOs Zod: createCertificationsSchema, updateCertificationsSchema, certificationsParamsSchema
+    - Validação de URL para campo url
+    - CertificationsController e rotas RESTful completas
+    - Testes de integração completos (tests/integration/certifications.api.test.ts) cobrindo todos os endpoints
+
+#### Changed
+- **Task: Integração das rotas do Épico 3 no app.ts**
+  - Rotas de Experience registradas em /api/v1/experience
+  - Rotas de Education registradas em /api/v1/education
+  - Rotas de Projects registradas em /api/v1/projects
+  - Rotas de Contacts registradas em /api/v1/contacts
+  - Rotas de SocialLinks registradas em /api/v1/social-links
+  - Rotas de Languages registradas em /api/v1/languages
+  - Rotas de Certifications registradas em /api/v1/certifications
+  - Mantida consistência com a estrutura de rotas existente
+
+#### Performance
+- **Task: Otimizações de consultas nos repositórios do Épico 3**
+  - Ordenação por data (start_date, issue_date) ou createdAt desc nos métodos findByPeopleId
+  - Uso de findUnique para buscas por ID (mais eficiente que findFirst)
+  - Validação de existência da pessoa antes de criar entidades relacionadas para evitar operações desnecessárias
+
+---
+
 ### [Épico 2: CRUD Core (People)]
 #### Added
 - **Task: (PEOPLE-01) Implementar PeopleRepository (CRUD)**
