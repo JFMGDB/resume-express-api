@@ -1,6 +1,6 @@
 import { People, Prisma } from '@prisma/client';
 import prisma from '../config/database';
-import { IPeopleRepository } from '../interfaces/IPeopleRepository';
+import { IPeopleRepository, PeopleWithFullResume } from '../interfaces/IPeopleRepository';
 
 /**
  * Implementação do repositório de People
@@ -79,6 +79,26 @@ export class PeopleRepository implements IPeopleRepository {
         skills: {
           disconnect: { id: skillId },
         },
+      },
+    });
+  }
+
+  /**
+   * Busca uma pessoa pelo ID com todas as relações incluídas
+   * Utiliza eager-loading do Prisma para buscar todas as relações em uma única consulta
+   */
+  async findFullById(id: string): Promise<PeopleWithFullResume | null> {
+    return prisma.people.findUnique({
+      where: { id },
+      include: {
+        contacts: true,
+        education: true,
+        experience: true,
+        projects: true,
+        certifications: true,
+        languages: true,
+        social_links: true,
+        skills: true,
       },
     });
   }

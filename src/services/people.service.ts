@@ -1,5 +1,5 @@
 import { People, Prisma } from '@prisma/client';
-import { IPeopleRepository } from '../interfaces/IPeopleRepository';
+import { IPeopleRepository, PeopleWithFullResume } from '../interfaces/IPeopleRepository';
 import { PeopleRepository } from '../repositories/people.repository';
 import { ISkillsRepository } from '../interfaces/ISkillsRepository';
 import { SkillsRepository } from '../repositories/skills.repository';
@@ -59,10 +59,7 @@ export class PeopleService {
    */
   async getPersonById(id: string): Promise<People> {
     const person = await this.peopleRepository.findById(id);
-
-    if (!person) {
-      throw new NotFoundError('Person not found');
-    }
+    this.validatePersonExists(person);
 
     return person;
   }
@@ -113,6 +110,17 @@ export class PeopleService {
   }
 
   /**
+   * Valida se uma pessoa existe no banco de dados
+   * @param person Pessoa a ser validada (pode ser null)
+   * @throws NotFoundError se a pessoa não for encontrada
+   */
+  private validatePersonExists<T>(person: T | null): asserts person is T {
+    if (!person) {
+      throw new NotFoundError('Person not found');
+    }
+  }
+
+  /**
    * Valida se a skill existe no banco de dados
    * @param skillId ID da skill a ser validada
    * @throws NotFoundError se a skill não for encontrada
@@ -154,6 +162,20 @@ export class PeopleService {
     await this.validateSkillExists(skillId);
 
     return this.peopleRepository.disassociateSkill(peopleId, skillId);
+  }
+
+  /**
+   * Busca uma pessoa pelo ID com todas as suas relações incluídas
+   * Retorna o currículo completo da pessoa em uma única consulta
+   * @param id ID da pessoa
+   * @returns Promise com a pessoa encontrada com todas as relações
+   * @throws NotFoundError se a pessoa não for encontrada
+   */
+  async getPersonFullById(id: string): Promise<PeopleWithFullResume> {
+    const person = await this.peopleRepository.findFullById(id);
+    this.validatePersonExists(person);
+
+    return person;
   }
 }
 

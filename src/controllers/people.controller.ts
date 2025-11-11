@@ -119,5 +119,19 @@ export class PeopleController {
       next(error);
     }
   };
+
+  /**
+   * Busca uma pessoa pelo ID com todas as relações incluídas (currículo completo)
+   */
+  getFull = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const { id } = req.params;
+      const personFull = await this.peopleService.getPersonFullById(id);
+
+      res.status(200).json(personFull);
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 

@@ -1,4 +1,30 @@
-import { People, Prisma } from '@prisma/client';
+import {
+  People,
+  Prisma,
+  Contacts,
+  Education,
+  Experience,
+  Projects,
+  Certifications,
+  Languages,
+  SocialLinks,
+  Skills,
+} from '@prisma/client';
+
+/**
+ * Tipo que representa uma pessoa com todas as suas relações incluídas
+ * Usado para o endpoint GET /people/:id/full
+ */
+export type PeopleWithFullResume = People & {
+  contacts: Contacts[];
+  education: Education[];
+  experience: Experience[];
+  projects: Projects[];
+  certifications: Certifications[];
+  languages: Languages[];
+  social_links: SocialLinks[];
+  skills: Skills[];
+};
 
 /**
  * Interface para o repositório de People
@@ -55,5 +81,12 @@ export interface IPeopleRepository {
    * @returns Promise com a pessoa atualizada
    */
   disassociateSkill(peopleId: string, skillId: string): Promise<People>;
+
+  /**
+   * Busca uma pessoa pelo ID com todas as relações incluídas
+   * @param id ID da pessoa
+   * @returns Promise com a pessoa encontrada com todas as relações ou null se não existir
+   */
+  findFullById(id: string): Promise<PeopleWithFullResume | null>;
 }
 

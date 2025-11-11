@@ -215,6 +215,150 @@ O projeto implementa os seguintes middlewares globais:
 }
 ```
 
+#### Buscar Pessoa Completa por ID (Currículo Agregado)
+
+- `GET /api/v1/people/:id/full`: Busca uma pessoa pelo ID com todas as suas relações incluídas (currículo completo)
+
+**Parâmetros:**
+- `id` (string, obrigatório): ID da pessoa (cuid)
+
+**Descrição:**
+Este endpoint retorna uma pessoa com todas as suas relações incluídas em uma única chamada HTTP. Utiliza eager-loading do Prisma para otimizar a consulta ao banco de dados, buscando todas as relações em uma única query.
+
+**Resposta de Sucesso (200):**
+```json
+{
+  "id": "clxmg9v4o000008l4f3h3g3q3",
+  "full_name": "João Silva",
+  "headline": "Desenvolvedor Full-Stack Sênior",
+  "summary": "Engenheiro de software com 8 anos de experiência...",
+  "location": "São Paulo, Brasil",
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+  "contacts": [
+    {
+      "id": "clxmg9v4o000008l4f3h3g4q4",
+      "type": "email",
+      "value": "joao@example.com",
+      "peopleId": "clxmg9v4o000008l4f3h3g3q3",
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "clxmg9v4o000008l4f3h3g5q5",
+      "type": "phone",
+      "value": "+55 11 98765-4321",
+      "peopleId": "clxmg9v4o000008l4f3h3g3q3",
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    }
+  ],
+  "education": [
+    {
+      "id": "clxmg9v4o000008l4f3h3g6q6",
+      "institution": "Universidade de São Paulo",
+      "degree": "Bacharelado em Ciência da Computação",
+      "field_of_study": "Ciência da Computação",
+      "start_date": "2010-01-01T00:00:00.000Z",
+      "end_date": "2014-12-31T23:59:59.999Z",
+      "description": null,
+      "peopleId": "clxmg9v4o000008l4f3h3g3q3",
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    }
+  ],
+  "experience": [
+    {
+      "id": "clxmg9v4o000008l4f3h3g7q7",
+      "company": "Tech Corp",
+      "position": "Desenvolvedor Full-Stack",
+      "start_date": "2015-01-01T00:00:00.000Z",
+      "end_date": "2020-12-31T23:59:59.999Z",
+      "description": "Desenvolvimento de aplicações web escaláveis.",
+      "location": null,
+      "peopleId": "clxmg9v4o000008l4f3h3g3q3",
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    }
+  ],
+  "projects": [
+    {
+      "id": "clxmg9v4o000008l4f3h3g8q8",
+      "name": "Projeto API",
+      "description": "API RESTful para gerenciamento de dados",
+      "url": "https://example.com/project",
+      "repository_url": null,
+      "start_date": "2021-01-01T00:00:00.000Z",
+      "end_date": null,
+      "peopleId": "clxmg9v4o000008l4f3h3g3q3",
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    }
+  ],
+  "certifications": [
+    {
+      "id": "clxmg9v4o000008l4f3h3g9q9",
+      "name": "AWS Certified Developer",
+      "issuer": "AWS",
+      "issue_date": "2022-01-01T00:00:00.000Z",
+      "url": "https://aws.amazon.com/certification",
+      "peopleId": "clxmg9v4o000008l4f3h3g3q3",
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    }
+  ],
+  "languages": [
+    {
+      "id": "clxmg9v4o000008l4f3h3gaqa",
+      "name": "Português",
+      "proficiency": "Nativo",
+      "peopleId": "clxmg9v4o000008l4f3h3g3q3",
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    }
+  ],
+  "social_links": [
+    {
+      "id": "clxmg9v4o000008l4f3h3gbqb",
+      "platform": "linkedin",
+      "url": "https://linkedin.com/in/joaosilva",
+      "peopleId": "clxmg9v4o000008l4f3h3g3q3",
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    }
+  ],
+  "skills": [
+    {
+      "id": "clxmg9v4o000008l4f3h3gcqc",
+      "name": "TypeScript",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    }
+  ]
+}
+```
+
+**Notas:**
+- Todas as relações são retornadas como arrays, mesmo que estejam vazios
+- O endpoint é público (não requer autenticação)
+- Utiliza eager-loading para otimizar a performance, buscando todas as relações em uma única consulta ao banco de dados
+- Retorna todas as 8 relações: `contacts`, `education`, `experience`, `projects`, `certifications`, `languages`, `social_links`, `skills`
+
+**Resposta de Erro (404):**
+```json
+{
+  "status": "error",
+  "message": "Person not found"
+}
+```
+
+**Resposta de Erro (400):**
+```json
+{
+  "status": "error",
+  "message": "Validation failed",
+  "errors": [
+    {
+      "code": "invalid_string",
+      "path": ["params", "id"],
+      "message": "ID inválido"
+    }
+  ]
+}
+```
+
 #### Criar Nova Pessoa
 
 - `POST /api/v1/people`: Cria uma nova pessoa
@@ -923,7 +1067,7 @@ npm run test:unit
 
 **Exemplos:**
 - `tests/unit/health.controller.test.ts` - Testes do Health Controller
-- `tests/unit/people.service.test.ts` - Testes do People Service (100% de cobertura)
+- `tests/unit/people.service.test.ts` - Testes do People Service (100% de cobertura, incluindo método getPersonFullById)
 - `tests/unit/skills.service.test.ts` - Testes do Skills Service (100% de cobertura)
 
 ### Testes de Integração
@@ -938,7 +1082,7 @@ npm run test:integration
 
 **Exemplos:**
 - `tests/integration/health.api.test.ts` - Testes da Health API
-- `tests/integration/people.api.test.ts` - Testes completos da People API (todos os endpoints CRUD)
+- `tests/integration/people.api.test.ts` - Testes completos da People API (todos os endpoints CRUD, incluindo endpoint agregado GET /people/:id/full)
 - `tests/integration/experience.api.test.ts` - Testes completos da Experience API
 - `tests/integration/education.api.test.ts` - Testes completos da Education API
 - `tests/integration/projects.api.test.ts` - Testes completos da Projects API

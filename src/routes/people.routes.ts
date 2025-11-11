@@ -45,6 +45,19 @@ router.post(
 );
 
 /**
+ * GET /api/v1/people/:id/full
+ * Busca uma pessoa pelo ID com todas as relações incluídas (currículo completo)
+ * IMPORTANTE: Esta rota deve vir antes de /:id para evitar conflito de rotas
+ */
+router.get(
+  '/:id/full',
+  validate({
+    params: personParamsSchema,
+  }),
+  peopleController.getFull
+);
+
+/**
  * GET /api/v1/people/:id
  * Busca uma pessoa pelo ID
  */

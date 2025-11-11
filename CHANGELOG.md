@@ -5,6 +5,38 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 e este projeto adere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### [Épico 5: Endpoint Agregado]
+#### Added
+- **Task: (AGG-01) Endpoint GET /people/:id/full**
+  - Endpoint agregado que retorna uma pessoa com todas as suas relações incluídas
+  - Rota GET /api/v1/people/:id/full implementada e funcional
+  - Endpoint público (sem autenticação) para facilitar consumo por front-end
+  - Retorna currículo completo em uma única chamada HTTP
+
+- **Task: (AGG-02) Implementar getPersonFullById (Service e Repo)**
+  - Tipo PeopleWithFullResume criado para representar pessoa com todas as relações
+  - Método findFullById adicionado na interface IPeopleRepository
+  - Implementação no PeopleRepository usando Prisma include para eager-loading
+  - Inclui todas as 8 relações: contacts, education, experience, projects, certifications, languages, social_links, skills
+  - Método getPersonFullById no PeopleService com validação de existência
+  - Utiliza eager-loading do Prisma para buscar todas as relações em uma única consulta ao banco
+
+- **Task: (AGG-03) Testar integração do endpoint /full**
+  - Testes de integração completos (tests/integration/people.api.test.ts) cobrindo o endpoint /full
+  - Teste de sucesso com pessoa contendo todas as relações
+  - Teste de sucesso com pessoa sem relações (arrays vazios)
+  - Teste de erro 404 quando pessoa não existe
+  - Teste de erro 400 com ID inválido
+  - Validação completa da estrutura JSON de resposta incluindo todas as relações
+
+#### Performance
+- **Task: Otimização do endpoint /full**
+  - Uso de eager-loading do Prisma (include) para buscar todas as relações em uma única consulta
+  - Redução de múltiplas consultas ao banco para uma única consulta otimizada
+  - Melhoria significativa na latência do endpoint agregado
+
+---
+
 ### [Épico 4: Skills (N:M)]
 #### Added
 - **Task: (SKILL-01) Criar/ler Skills globais (CRUD)**
